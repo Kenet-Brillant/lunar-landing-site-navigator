@@ -28,6 +28,38 @@ nav.tabs button.active{background:#407cff;color:white}
 #page-home .analysis-home{margin-top:16px}
 #page-home .analysis-home .two{max-width:850px}
 #page-explore .configgrid{margin-top:14px}
+
+/* V10 — Chronologie opérationnelle et lecture temporelle */
+.v10-controls{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:12px}
+.v10-controls select{width:auto;min-width:110px}
+.v10-timeline{margin-top:20px;padding:17px;background:#09182b;border:1px solid #29455e;border-radius:12px}
+.v10-track{display:flex;height:27px;border-radius:5px;overflow:hidden;background:#1b2b3c;position:relative;margin:8px 0 13px;cursor:pointer}
+.v10-segment{height:100%;flex:1;min-width:0;border-right:1px solid #07132222}
+.v10-segment[data-state="3"]{background:#31b8a2}.v10-segment[data-state="2"]{background:#e5a84a}.v10-segment[data-state="1"]{background:#478ec6}.v10-segment[data-state="0"]{background:#354052}
+.v10-cursor{position:absolute;top:0;bottom:0;width:3px;background:#fff;box-shadow:0 0 7px #fff;pointer-events:none;transform:translateX(-50%)}
+.v10-legend{display:flex;gap:14px;flex-wrap:wrap;color:#b7c9d9;font-size:12px;margin-top:12px}
+.v10-dot{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px}
+.v10-windows{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:12px}
+.v10-window{padding:12px;border-radius:9px;background:#10233a}.v10-window b{display:block;font-size:20px;margin-top:4px}
+@media(max-width:650px){.v10-windows{grid-template-columns:1fr}}
+
+/* V17 — Modes de lecture, sans changement du moteur scientifique */
+.v17-switch{display:flex;align-items:center;gap:9px;flex-wrap:wrap;padding:7px 12px;border:1px solid #385b78;border-radius:12px;background:#0e263c}
+.v17-switch strong{font-size:12px;color:#a8c9de;margin-right:5px}
+.v17-switch button{padding:7px 12px;font-size:12px;background:#193b57;color:#c4d9e9;border:1px solid transparent}
+.v17-switch button[aria-pressed="true"]{background:#257eac;color:white;border-color:#8ddcf3}
+.v17-help{background:linear-gradient(115deg,#10344c,#10263d);border:1px solid #397c97;border-radius:12px;padding:17px 19px;margin:12px 0;color:#d9eef9;line-height:1.65}
+.v17-help h3{margin:0 0 8px;font-size:17px;color:#e5faff}
+.v17-help p{margin:6px 0;font-size:13px}
+.v17-help .v17-steps{display:flex;gap:9px;flex-wrap:wrap;margin-top:12px}
+.v17-help .v17-steps span{padding:7px 11px;border-radius:30px;background:#1c4964;font-size:12px}
+body[data-mode="expert"] .v17-beginner-only{display:none!important}
+body[data-mode="beginner"] .v17-expert-only{display:none!important}
+body[data-mode="beginner"] #page-explore .compact-fold[data-v17-advanced="true"]{display:none}
+body[data-mode="beginner"] #page-explore .compact-fold[data-v17-advanced="true"].v17-revealed{display:block}
+.v17-more{display:inline-flex;margin:12px 0;padding:9px 13px;font-size:12px;background:#23455f}
+.v17-inline-tip{font-size:12px;color:#b3d2e6;line-height:1.55;margin:8px 0}
+@media(max-width:700px){.v17-switch{width:100%;justify-content:center}.v17-help{padding:13px}}
 </style><style>
 /* V6 — direction artistique lunaire, animations discrètes et accessibles */
 :root{color-scheme:dark;--accent:#59bdf5;--cyan:#6ce5dc;--gold:#f7be69;--ink:#07101f}
@@ -90,13 +122,115 @@ nav.tabs button.active{box-shadow:0 0 0 1px rgba(105,217,255,.24),0 6px 22px rgb
 nav.tabs button.active::after{content:"";position:absolute;bottom:0;left:18%;right:18%;height:2px;background:#92ecff;box-shadow:0 0 12px #63e1ff}
 @media(max-width:700px){body::before{background-position:62% center}}
 @media(prefers-reduced-motion:reduce){nav.tabs button{transition:none}}
+
+/* V9 — diagramme du ciel lunaire */
+.sky-panel{margin-top:20px;border-top:1px solid rgba(105,163,206,.3);padding-top:18px}
+.sky-layout{display:grid;grid-template-columns:minmax(280px,460px) minmax(240px,1fr);gap:20px;align-items:center}
+#skyCanvas{width:100%;aspect-ratio:1;background:#071322;border:1px solid #35516e;border-radius:12px}
+.sky-readout{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.sky-readout .stat{margin:0}
+.sky-readout b{font-size:17px}
+#skyTimeSlider{width:100%}
+@media(max-width:850px){.sky-layout{grid-template-columns:1fr}}
+</style><style>
+/* V10.1 — panneaux indépendants, multi-ouverture */
+#page-explore .compact-toolbar{display:flex;align-items:center;flex-wrap:wrap;gap:10px;margin:14px 0}
+#page-explore .compact-toolbar-label{color:#c7d9eb;font-weight:700;margin-right:auto}
+#page-explore .compact-action{width:auto;padding:9px 14px;font-size:13px}
+#page-explore .compact-fold{border:1px solid rgba(105,163,206,.33);border-radius:13px;background:rgba(7,21,40,.86);margin:10px 0;overflow:hidden}
+#page-explore .compact-fold>summary{cursor:pointer;list-style:none;padding:17px 20px;font-weight:750;color:#e5f3ff;display:flex;align-items:center;justify-content:space-between;gap:12px;user-select:none}
+#page-explore .compact-fold>summary::-webkit-details-marker{display:none}
+#page-explore .compact-fold>summary::after{content:'+';font-size:23px;line-height:1;color:#82d9f6}
+#page-explore .compact-fold[open]>summary::after{content:'−'}
+#page-explore .compact-fold[open]>summary{border-bottom:1px solid rgba(105,163,206,.25);background:rgba(30,70,104,.23)}
+#page-explore .compact-fold>summary:focus-visible{outline:2px solid #78dcff;outline-offset:-3px}
+#page-explore .compact-body{padding:16px 18px 20px}
+#page-explore .compact-outer .explorer-config{margin:0}
+#page-explore .compact-outer .explorer-config>.hero{display:none}
+#page-explore .compact-fold .sky-panel{margin-top:0;border-top:0;padding-top:0}
+#page-explore .compact-fold .sky-panel>h2{display:none}
+#page-explore .compact-fold .v10-timeline{margin-top:0}
+#page-explore .compact-fold .v10-timeline>h2{display:none}
+#page-explore .compact-fold .tabgrid{display:block}
+#page-explore .tabgrid{display:block}
+#page-explore .tabgrid>section.panel{max-width:none;width:100%;padding:0;background:transparent!important;border:0;box-shadow:none}
+@media(max-width:700px){#page-explore .compact-fold>summary{padding:13px}#page-explore .compact-body{padding:10px}}
+
+/* V10.2 — accueil enrichi : les sections V10.1 restent intactes */
+#page-home .home-intro{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(260px,.75fr);gap:18px;align-items:stretch;margin:16px 0 22px}
+#page-home .home-intro-copy{padding:30px;border-radius:16px;border:1px solid rgba(123,202,244,.34);background:linear-gradient(110deg,rgba(7,29,53,.96),rgba(9,42,70,.83));display:flex;flex-direction:column;justify-content:center;gap:14px}
+#page-home .home-eyebrow{color:#8adbf3;letter-spacing:2px;font-size:11px;font-weight:800}
+#page-home .home-intro h2{font-size:clamp(25px,3.4vw,43px);line-height:1.14;margin:0}
+#page-home .home-intro p{color:#c5d9e9;line-height:1.6;margin:0}
+#page-home .home-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:4px}
+#page-home .home-actions button{width:auto}
+#page-home .home-visual{min-height:230px;border-radius:16px;border:1px solid rgba(123,202,244,.26);background:linear-gradient(0deg,rgba(3,14,29,.52),rgba(3,14,29,.15)),url('/static/lunar-background-v7.jpg') center/cover;display:flex;align-items:end;padding:20px}
+#page-home .home-visual-caption{font-size:12px;color:#d6e9f7;background:rgba(4,17,32,.8);padding:9px 12px;border-radius:8px}
+#page-home .home-features{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:20px}
+#page-home .home-feature{background:rgba(9,27,49,.84);border:1px solid rgba(120,188,226,.24);border-radius:12px;padding:16px}
+#page-home .home-feature .kicker{font-size:11px;color:#a4c7dd;letter-spacing:.4px}
+#page-home .home-feature strong{display:block;font-size:20px;color:#f3faff;margin:8px 0 5px}
+#page-home .home-feature small{font-size:11px;line-height:1.4}
+#page-home .home-extras{display:grid;grid-template-columns:minmax(270px,1fr) minmax(270px,1fr);gap:16px;margin:20px 0}
+#page-home .home-map-shell{position:relative;max-width:380px;width:100%;aspect-ratio:1;margin:10px auto 5px;background:#071422;border:1px solid #476b88;border-radius:12px;overflow:hidden}
+#page-home .home-map-shell img{display:block;width:100%;height:100%;object-fit:fill}
+#page-home .home-map-shell svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+#page-home .home-map-dot{position:absolute;width:11px;height:11px;border-radius:50%;background:#ffb54d;border:2px solid white;box-shadow:0 0 12px #ffb54d;transform:translate(-50%,-50%);left:50%;top:0;pointer-events:none}
+#page-home .home-step{display:flex;gap:12px;margin:12px 0;align-items:flex-start}
+#page-home .home-step-num{flex:none;background:#153e5a;color:#9ce7fa;border-radius:8px;padding:7px 11px;font-weight:800}
+#page-home .home-step div:last-child{line-height:1.5}
+#page-home .home-extra-title{margin:0 0 10px}
+#page-home .home-small-link{margin-top:12px}
+#page-home .home-small-link button{width:auto}
+@media(max-width:850px){#page-home .home-intro,#page-home .home-extras{grid-template-columns:1fr}#page-home .home-features{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:460px){#page-home .home-intro-copy{padding:20px}#page-home .home-visual{min-height:160px}}
+</style><style>
+.v12-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.v12-kpi{padding:14px;background:#10243a;border:1px solid #29445d;border-radius:10px}.v12-kpi span{display:block;color:#aebdd2;font-size:12px}.v12-kpi b{display:block;font-size:21px;margin-top:6px}.v12-inputs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.v12-note{font-size:12px;color:#f6cf8b;line-height:1.65;margin-top:12px}.v12-energybar{height:14px;background:#23364c;border-radius:9px;overflow:hidden;margin-top:8px}.v12-energybar>div{height:100%;width:0%;background:#38bda6;transition:width .2s}.v12-results{margin-top:15px}.v12-results p{font-size:13px;color:#c5d4e4;line-height:1.6}@media(max-width:750px){.v12-grid,.v12-inputs{grid-template-columns:1fr}}
+</style><style>
+.v14-tools{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:14px 0}.v14-tools .sub{font-size:12px;flex-basis:100%}.v14-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin:14px 0}.v14-card{background:#11263c;border:1px solid #2a4760;border-radius:12px;padding:14px}.v14-card h3{margin:0 0 8px;font-size:15px}.v14-card p{margin:5px 0;color:#b9c9d9;font-size:12px}.v14-card button{padding:6px 10px;font-size:12px}.v14-chart{background:#0b1c30;border:1px solid #28445c;border-radius:12px;padding:14px;margin:12px 0}.v14-chart h3{font-size:15px;margin:0 0 12px}.v14-bar-row{display:grid;grid-template-columns:minmax(120px,190px) 1fr 70px;align-items:center;gap:10px;margin:9px 0;font-size:12px}.v14-track{height:13px;background:#24374a;border-radius:8px;overflow:hidden}.v14-fill{height:100%;border-radius:8px}.v14-legend{font-size:12px;color:#a9bdcd;margin:8px 0}.v14-note{font-size:12px;color:#adc0d0;line-height:1.55}.v14-empty{padding:16px;border:1px dashed #426079;border-radius:10px;color:#a9bdcd}
+</style><style>
+.v15-panel{max-width:1200px;margin:0 auto;padding:20px}.v15-controls{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-bottom:16px}.v15-controls input{max-width:320px}.v15-controls select{min-width:170px}.v15-globes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.v15-globes>div{background:#091b2d;border:1px solid #2a4760;border-radius:14px;text-align:center;padding:12px}.v15-globes h3{font-size:15px;margin:5px 0 10px}.v15-globes svg{width:100%;max-width:420px;height:auto}.v15-note{font-size:12px;color:#b4c8da;line-height:1.6}.v15-detail{border:1px solid #365b76;border-radius:12px;background:#10263c;padding:15px;margin:16px 0;line-height:1.6}.v15-detail h3{margin:0 0 8px}.v15-tablewrap{overflow-x:auto}.v15-tablewrap tr{cursor:pointer}.v15-tablewrap tr:hover{background:#1b3a56}.v15-point{cursor:pointer}.v15-point:focus{outline:none;stroke:#fff;stroke-width:3}.v15-point:hover{stroke:#fff;stroke-width:3}@media(max-width:700px){.v15-globes{grid-template-columns:1fr}}
+</style><style>
+.v16-shell{max-width:1300px;margin:12px auto}.v16-fields{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}.v16-view{position:relative;background:radial-gradient(ellipse at center,#13283e,#050d19 75%);border:1px solid #34516b;border-radius:13px;overflow:hidden}.v16-view canvas{display:block;width:100%;height:auto;touch-action:none;cursor:grab}.v16-view canvas:active{cursor:grabbing}.v16-hint{position:absolute;bottom:12px;left:14px;color:#c1d8e9;font-size:12px;pointer-events:none}.v16-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:12px 0}@media(max-width:760px){.v16-fields{grid-template-columns:repeat(2,1fr)}.v16-stats{grid-template-columns:1fr}}
 </style></head><body>
-<header><div><div class="sub" style="font-size:11px;letter-spacing:2px">LUNAR MISSION ANALYSIS</div><h1>Lunar Landing Site Navigator <span class="tag">V7 · Lunar Experience</span></h1><div class="sub" style="font-size:12px">Pôle Sud · LOLA / NASA · Éphémérides JPL Horizons</div></div><div class="sub" id="health">Chargement…</div></header><nav aria-label="Navigation principale" class="tabs"><button class="active" data-tab="home" type="button">Accueil</button><button class="" data-tab="explore" type="button">Explorer</button><button class="" data-tab="comparetab" type="button">Comparer</button></nav><section class="tabpage active" id="page-home"><div class="hero"><h2>Conditions lunaires · Aujourd’hui</h2><p class="sub">Événements calculés à l’heure UTC actuelle pour le site sélectionné. Les durées se mettent à jour chaque seconde.</p></div><div class="dashboard"><section class="panel"><h2>Prochains événements Soleil / Terre</h2><h2 style="margin-top:23px">Prochains événements · maintenant (UTC)</h2>
+<header><div><div class="sub" style="font-size:11px;letter-spacing:2px">LUNAR MISSION ANALYSIS</div><h1>Lunar Landing Site Navigator <span class="tag">V16.1 · Relief 3D</span></h1><div class="sub" style="font-size:12px">Pôle Sud · LOLA / NASA · Éphémérides JPL Horizons</div></div><div class="v17-switch" role="group" aria-label="Niveau d'affichage"><strong>Mode d’utilisation</strong><button type="button" id="v17Beginner" aria-pressed="false">Débutant</button><button type="button" id="v17Expert" aria-pressed="true">Expert</button></div><div class="sub" id="health">Chargement…</div></header><nav aria-label="Navigation principale" class="tabs"><button class="active" data-tab="home" type="button">Accueil</button><button class="" data-tab="explore" type="button">Explorer</button><button class="" data-tab="comparetab" type="button">Comparer</button><button class="" data-tab="missions" type="button">Missions</button><button data-tab="terrain3d" type="button">Relief 3D</button></nav><section class="tabpage active" id="page-home"><div class="v17-help v17-beginner-only"><h3>Bienvenue sur la Lune</h3><p>Commence par « Explorer » pour choisir un lieu, simuler la lumière solaire et la visibilité de la Terre. Passe en mode Expert à tout moment pour accéder aux réglages scientifiques.</p></div>
+<div class="home-intro">
+  <div class="home-intro-copy">
+    <div class="home-eyebrow">MISSION CONTROL · PÔLE SUD LUNAIRE</div>
+    <h2>Explorez la Lune.<br>Préparez votre mission.</h2>
+    <p>Choisissez un site, étudiez le relief et les conditions Soleil–Terre, puis comparez les options d'alunissage avec des indicateurs traçables.</p>
+    <div class="home-actions"><button id="homeStartExplore" type="button">Explorer les sites</button><button class="secondary" id="homeStartCompare" type="button">Comparer les sites</button></div>
+  </div>
+  <div class="home-visual"><div class="home-visual-caption">Lunar Landing Site Navigator · Prototype scientifique</div></div>
+</div>
+<div class="home-features" aria-label="Fonctionnalités principales">
+  <div class="home-feature"><span class="kicker">ZONE CARTOGRAPHIÉE</span><strong>85°S – 90°S</strong><small>Carte polaire LOLA géoréférencée</small></div>
+  <div class="home-feature"><span class="kicker">RELIEF</span><strong>LOLA</strong><small>Altitude et pente locale estimée</small></div>
+  <div class="home-feature"><span class="kicker">ÉPHÉMÉRIDES</span><strong>JPL Horizons</strong><small>Soleil et Terre selon la date choisie</small></div>
+  <div class="home-feature"><span class="kicker">ANALYSE</span><strong>Site + date</strong><small>Visibilité, fenêtres et comparaison</small></div>
+</div>
+<div class="hero"><h2>Conditions lunaires · Aujourd’hui</h2><p class="sub">Événements calculés à l’heure UTC actuelle pour le site sélectionné. Les durées se mettent à jour chaque seconde.</p></div><div class="dashboard"><section class="panel"><h2>Prochains événements Soleil / Terre</h2><h2 style="margin-top:23px">Prochains événements · maintenant (UTC)</h2>
 <div class="two">
 <div class="stat"><span id="sunEventLabel">Soleil · recherche en cours</span><b id="sunCountdown">—</b><small id="sunEventTime">—</small></div>
 <div class="stat"><span id="earthEventLabel">Terre · recherche en cours</span><b id="earthCountdown">—</b><small id="earthEventTime">—</small></div>
 </div>
-<div class="sub" style="font-size:12px">Comptes à rebours calculés pour le site sélectionné, sur 14, 30 ou 60 jours selon les transitions détectées. Actualisation des prévisions toutes les 15 minutes. Estimations géométriques provisoires.</div></section><section class="panel"><h2>Site actuellement sélectionné</h2><p class="sub" id="homeCoords">85°S / 0°E</p><div class="stat"><span>Altitude LOLA</span><b id="homeAlt">—</b></div><div class="stat"><span>Pente locale estimée</span><b id="homeSlope">—</b></div><button id="goExplore" type="button">Voir sur la carte</button><p class="notice" style="margin-top:12px">Le classement ci-dessous est une présélection exploratoire (pente + visibilité terrestre historique), pas une validation d’alunissage. L’ensoleillement n’est pas encore noté.</p><h2 style="margin-top:22px">Candidats présélectionnés</h2><div class="sub" id="homeRanking">Lance le balayage depuis Explorer.</div></section></div><section class="panel analysis-home"><h2>Analyse détaillée du site sélectionné</h2><div class="stat"><span>Altitude LOLA relative au rayon de référence</span><b id="alt">—</b></div><div class="two"><div class="stat"><span>Terre · moyenne historique</span><b id="earthval">—</b></div><div class="stat"><span>Soleil · moyenne historique</span><b id="sunval">—</b></div></div><div class="stat"><span>Zone d'ombre permanente</span><b id="psrval">—</b></div><h2 style="margin-top:23px">Fenêtres de visibilité · période choisie</h2><div class="two"><div class="stat"><span>Soleil visible</span><b id="sunpct">—</b></div><div class="stat"><span>Terre visible</span><b id="earthpct">—</b></div></div><div class="stat"><span>Soleil + Terre simultanément visibles</span><b id="bothpct">—</b></div><div class="stat"><span>Prochain coucher du Soleil (échantillonné)</span><b id="sunset">—</b></div><div class="notice" style="margin-top:20px">Méthode : DEM LOLA 120 m, horizon échantillonné jusqu'à 35 km ; visibilité géométrique du centre du Soleil/de la Terre. Les valeurs ne garantissent ni une puissance électrique donnée ni une liaison radio.</div></section></section><section class="tabpage" id="page-explore"><div class="hero"><h2>Explorer le pôle Sud</h2><p class="sub">Définis les paramètres de la mission, puis lance le balayage et consulte les résultats sur la carte.</p></div><section class="explorer-config"><div class="hero"><h2>Configuration de l’exploration et de la mission</h2><p class="sub">Choisis les coordonnées, la zone 85°S–90°S, les priorités et les contraintes. Lance ensuite l’analyse dans Explorer juste en dessous.</p></div><div class="configgrid"><section class="panel"><h2>Coordonnées et simulation</h2><div class="sub" style="font-size:13px">Clique sur la carte ou saisis des coordonnées.</div><div class="two"><div><label>Latitude (°)</label><input id="lat" max="-75" min="-90" step="0.001" type="number" value="-85"/></div><div><label>Longitude est (°)</label><input id="lon" max="180" min="-180" step="0.001" type="number" value="0"/></div></div><button class="secondary" id="locate" style="width:100%;margin-top:10px">Localiser le site</button><label>Sites de démonstration (coordonnées exploratoires)</label><button class="sitebtn" data-lat="-85" data-lon="0">Point A · 85°S / 0°E</button><button class="sitebtn" data-lat="-86" data-lon="30">Point B · 86°S / 30°E</button><button class="sitebtn" data-lat="-87" data-lon="-40">Point C · 87°S / 40°W</button><div class="notice" style="margin-top:9px">Ces points ne sont pas des sites d'alunissage approuvés. Ils servent à tester le moteur scientifique.</div><label>Date et heure UTC</label><input id="date" type="datetime-local"/><div class="two"><div><label>Durée (heures)</label><select id="hours"><option value="24">24 h</option><option selected="" value="72">72 h</option><option value="168">7 jours</option><option value="336">14 jours</option></select></div><div><label>Pas (heures)</label><select id="step"><option value="1">1 h</option><option selected="" value="0.5">30 min</option><option value="3">3 h</option><option value="6">6 h</option><option value="12">12 h</option></select></div></div><button id="run" style="width:100%;margin-top:18px">Lancer la simulation</button><button class="secondary" id="add" style="width:100%;margin-top:8px">Ajouter à la comparaison</button><div class="status" id="message">Sélectionne un site pour afficher ses données NASA. La simulation temporelle nécessite une connexion au service JPL Horizons.</div></section><section class="panel"><h2>Priorités de sélection</h2><p class="note">Ces paramètres sont sauvegardés dans ton navigateur. Ils serviront au moteur de classement lors de son intégration ; ils ne modifient pas encore les éphémérides.</p>
+<div class="sub" style="font-size:12px">Comptes à rebours calculés pour le site sélectionné, sur 14, 30 ou 60 jours selon les transitions détectées. Actualisation des prévisions toutes les 15 minutes. Estimations géométriques provisoires.</div></section><section class="panel"><h2>Site actuellement sélectionné</h2><p class="sub" id="homeCoords">85°S / 0°E</p><div class="stat"><span>Altitude LOLA</span><b id="homeAlt">—</b></div><div class="stat"><span>Pente locale estimée</span><b id="homeSlope">—</b></div><button id="goExplore" type="button">Voir sur la carte</button><p class="notice" style="margin-top:12px">Le classement ci-dessous est une présélection exploratoire (pente + visibilité terrestre historique), pas une validation d’alunissage. L’ensoleillement n’est pas encore noté.</p><h2 style="margin-top:22px">Candidats présélectionnés</h2><div class="sub" id="homeRanking">Lance le balayage depuis Explorer.</div></section></div><div class="home-extras">
+<section class="panel"><h2 class="home-extra-title">Aperçu cartographique du site</h2><p class="sub">Pôle Sud lunaire · 85°S–90°S · projection polaire</p>
+  <div class="home-map-shell" role="img" aria-label="Mini-carte du pôle Sud lunaire et position du site sélectionné"><img src="/api/polar-map" alt="Relief LOLA du pôle Sud lunaire" loading="lazy"><svg viewBox="0 0 1000 1000" aria-hidden="true"><g fill="none" stroke="#c0e9ff" stroke-opacity=".6" stroke-width="2"><circle cx="500" cy="500" r="500"/><circle cx="500" cy="500" r="400"/><circle cx="500" cy="500" r="300"/><circle cx="500" cy="500" r="200"/><circle cx="500" cy="500" r="100"/><path d="M500 0V1000 M0 500H1000"/></g><g fill="white" font-size="36" stroke="#061425" stroke-width="6" paint-order="stroke"><text x="510" y="490">90°S</text><text x="510" y="45">0°</text><text x="925" y="485">90°E</text></g></svg><span class="home-map-dot" id="homeMapDot"></span></div>
+  <div class="stat"><span>Site affiché sur la carte</span><b id="homeMapCoords">85°S / 0°E</b></div><div class="home-small-link"><button class="secondary" id="homeMapExplore" type="button">Ouvrir la carte interactive</button></div>
+</section>
+<section class="panel"><h2 class="home-extra-title">Comment utiliser le navigateur ?</h2>
+  <div class="home-step"><div class="home-step-num">01</div><div><b>Choisir un site</b><br><span class="sub">Clique sur la carte polaire ou saisis des coordonnées.</span></div></div>
+  <div class="home-step"><div class="home-step-num">02</div><div><b>Définir une date</b><br><span class="sub">Sélectionne l'instant, la durée et le pas temporel.</span></div></div>
+  <div class="home-step"><div class="home-step-num">03</div><div><b>Analyser les conditions</b><br><span class="sub">Observe l'horizon, les fenêtres Soleil–Terre et les contraintes de terrain.</span></div></div>
+  <div class="home-step"><div class="home-step-num">04</div><div><b>Comparer les candidats</b><br><span class="sub">Enregistre plusieurs sites pour examiner leurs compromis.</span></div></div>
+  <div class="notice">Les scores et visibilités sont exploratoires : ils ne certifient pas la sécurité d'un alunissage.</div>
+</section>
+</div>
+<section class="panel analysis-home"><h2>Analyse détaillée du site sélectionné</h2><div class="stat"><span>Altitude LOLA relative au rayon de référence</span><b id="alt">—</b></div><div class="two"><div class="stat"><span>Terre · moyenne historique</span><b id="earthval">—</b></div><div class="stat"><span>Soleil · moyenne historique</span><b id="sunval">—</b></div></div><div class="stat"><span>Zone d'ombre permanente</span><b id="psrval">—</b></div><h2 style="margin-top:23px">Fenêtres de visibilité · période choisie</h2><div class="two"><div class="stat"><span>Soleil visible</span><b id="sunpct">—</b></div><div class="stat"><span>Terre visible</span><b id="earthpct">—</b></div></div><div class="stat"><span>Soleil + Terre simultanément visibles</span><b id="bothpct">—</b></div><div class="stat"><span>Prochain coucher du Soleil (échantillonné)</span><b id="sunset">—</b></div><div class="notice" style="margin-top:20px">Méthode : DEM LOLA 120 m, horizon échantillonné jusqu'à 35 km ; visibilité géométrique du centre du Soleil/de la Terre. Les valeurs ne garantissent ni une puissance électrique donnée ni une liaison radio.</div></section></section><section class="tabpage" id="page-explore">
+<div class="v17-help v17-beginner-only" id="v17Guide" aria-live="polite"><h3>Explorer la Lune, étape par étape</h3><p><b>1.</b> Choisis un point sur la carte ou saisis sa latitude et sa longitude dans « Configuration de mission ».</p><p><b>2.</b> Choisis une date et lance la simulation. Le logiciel calcule les positions apparentes du Soleil et de la Terre et les compare à un horizon topographique estimé.</p><p><b>3.</b> Consulte le ciel et les fenêtres opérationnelles : elles indiquent les périodes favorables à l’éclairement et à une visibilité géométrique de la Terre.</p><div class="v17-steps"><span>☀ Soleil visible : éclairage potentiel</span><span>◉ Terre visible : liaison géométriquement possible</span><span>Attention : estimation, pas certification d’alunissage</span></div><button type="button" class="v17-more" id="v17ShowAdvanced">Afficher aussi les outils avancés</button></div>
+<div class="v17-help v17-expert-only"><h3>Mode Expert · Analyse scientifique</h3><p>Tous les paramètres et outils sont disponibles. Les cartes LOLA, éphémérides, scores, bilans d’énergie et reliefs 3D conservent leurs hypothèses et limites de validité.</p></div>
+<div class="hero"><h2>Explorer le pôle Sud</h2><p class="sub">Carte et analyses organisées en panneaux indépendants : ouvre uniquement les sections utiles.</p></div><div class="compact-toolbar"><span class="compact-toolbar-label">Organiser les panneaux</span><button class="secondary compact-action" data-compact-action="open" type="button">Tout ouvrir</button><button class="secondary compact-action" data-compact-action="close" type="button">Tout réduire</button></div><details class="compact-fold compact-outer" open=""><summary>01 · Configuration de mission</summary><div class="compact-body"><section class="explorer-config"><div class="hero"><h2>Configuration de l’exploration et de la mission</h2><p class="sub">Choisis les coordonnées, la zone 85°S–90°S, les priorités et les contraintes. Lance ensuite l’analyse dans Explorer juste en dessous.</p></div><div class="configgrid"><section class="panel"><h2>Coordonnées et simulation</h2><div class="sub" style="font-size:13px">Clique sur la carte ou saisis des coordonnées.</div><div class="two"><div><label>Latitude (°)</label><input id="lat" max="-75" min="-90" step="0.001" type="number" value="-85"/></div><div><label>Longitude est (°)</label><input id="lon" max="180" min="-180" step="0.001" type="number" value="0"/></div></div><button class="secondary" id="locate" style="width:100%;margin-top:10px">Localiser le site</button><label>Sites de démonstration (coordonnées exploratoires)</label><button class="sitebtn" data-lat="-85" data-lon="0">Point A · 85°S / 0°E</button><button class="sitebtn" data-lat="-86" data-lon="30">Point B · 86°S / 30°E</button><button class="sitebtn" data-lat="-87" data-lon="-40">Point C · 87°S / 40°W</button><div class="notice" style="margin-top:9px">Ces points ne sont pas des sites d'alunissage approuvés. Ils servent à tester le moteur scientifique.</div><label>Date et heure UTC</label><input id="date" type="datetime-local"/><div class="two"><div><label>Durée (heures)</label><select id="hours"><option value="24">24 h</option><option selected="" value="72">72 h</option><option value="168">7 jours</option><option value="336">14 jours</option></select></div><div><label>Pas (heures)</label><select id="step"><option value="1">1 h</option><option selected="" value="0.5">30 min</option><option value="3">3 h</option><option value="6">6 h</option><option value="12">12 h</option></select></div></div><button id="run" style="width:100%;margin-top:18px">Lancer la simulation</button><button class="secondary" id="add" style="width:100%;margin-top:8px">Ajouter à la comparaison</button><div class="status" id="message">Sélectionne un site pour afficher ses données NASA. La simulation temporelle nécessite une connexion au service JPL Horizons.</div></section><section class="panel"><h2>Priorités de sélection</h2><p class="note">Ces priorités déterminent désormais le score V13. Elles ne modifient pas les éphémérides JPL.</p>
 <div class="fieldrow"><label for="weightSun">Ensoleillement</label><input id="weightSun" max="100" min="0" type="range" value="33"/><output id="outSun">33 %</output></div>
 <div class="fieldrow"><label for="weightEarth">Communication Terre</label><input id="weightEarth" max="100" min="0" type="range" value="33"/><output id="outEarth">33 %</output></div>
 <div class="fieldrow"><label for="weightTerrain">Terrain</label><input id="weightTerrain" max="100" min="0" type="range" value="34"/><output id="outTerrain">34 %</output></div>
@@ -106,11 +240,46 @@ nav.tabs button.active::after{content:"";position:absolute;bottom:0;left:18%;rig
 <label for="maxSlope">Pente maximale envisagée (°)</label><input id="maxSlope" max="45" min="0" step="0.5" type="number" value="10"/>
 <label for="northLimit">Limite nord de la zone étudiée</label><select id="northLimit"><option value="-88">88°S–90°S · très polaire</option><option selected="" value="-85">85°S–90°S · recommandée</option><option value="-80">80°S–90°S · étendue</option><option value="-75">75°S–90°S · couverture LOLA</option></select>
 <label for="scanSpacing">Espacement initial du balayage (km)</label><select id="scanSpacing"><option value="2">2 km — détaillé</option><option selected="" value="5">5 km — équilibré</option><option value="10">10 km — rapide</option></select>
-<p class="notice" style="margin-top:12px">Ces contraintes pilotent désormais le balayage exploratoire. La pente seule ne permet pas de certifier un site d’alunissage.</p>
-</section></div></section><div class="tabgrid"><section class="panel"><div class="bar" style="justify-content:space-between;margin-bottom:12px"><h2 style="margin:0">02 · Carte lunaire</h2><select id="layer" style="width:190px"><option value="terrain">Relief LOLA</option><option value="earth">Visibilité Terre moyenne</option><option value="sun">Éclairement solaire moyen</option><option value="psr">Ombres permanentes</option></select></div><div class="bar" style="margin:0 0 14px"><button id="scanPole" type="button">Analyser la zone sélectionnée</button><span class="sub" id="scanStatus" style="font-size:12px">Balayage de grille, sans appel massif à JPL</span></div><div class="sub" id="scanResults" style="margin-bottom:12px">Aucun balayage effectué.</div><div class="mapframe" id="map"><img alt="Relief lunaire LOLA" id="base" src="/static/terrain.png"/><img alt="Couche NASA" id="overlay" src="/static/earth.png" style="display:none"/><div id="marker"></div><div id="candidatePins" style="position:absolute;inset:0;pointer-events:none"></div></div><div class="mapcaption"><span>Projection stéréographique polaire sud · centre : 90°S</span><span>75°S–90°S</span></div><div class="notice" style="margin-top:10px">Les couches d'éclairement et d'ombres permanentes ne couvrent que la zone 85°S–90°S. Les moyennes NASA ne représentent pas une date précise.</div><h2 style="margin-top:22px">03 · Évolution temporelle</h2><canvas height="230" id="chart" width="900"></canvas><div class="sub" style="font-size:12px;margin-top:6px">Courbes : élévation solaire (ambre) et terrestre (bleu). Les points tiennent compte de l'horizon topographique pour les états visibles/masqués.</div><div id="timeline" style="margin-top:12px"></div></section></div></section><section class="tabpage" id="page-comparetab"><div class="hero"><h2>Comparer les sites</h2><p class="sub">Ajoute des sites depuis la configuration située en haut de la page Explorer. Compare les résultats obtenus avec des paramètres identiques.</p></div><section class="panel" style="max-width:1100px;margin:0 auto"><h2 style="margin-top:22px">05 · Comparaison</h2><div class="sub" style="font-size:12px">Ajoute plusieurs sites puis lance une simulation pour chacun.</div><div id="compare" style="overflow-x:auto;margin-top:10px"><div class="sub">Aucun site enregistré.</div></div><button class="secondary" id="clear" style="margin-top:12px">Effacer la comparaison</button></section></section>
+<label style="display:flex;align-items:center;gap:10px;margin-top:14px"><input id="v13ExcludePsr" type="checkbox" checked style="width:auto"> Exclure les zones d’ombre permanente (PSR)</label><p class="notice" style="margin-top:12px">Ces contraintes pilotent désormais le balayage exploratoire. La pente seule ne permet pas de certifier un site d’alunissage.</p>
+</section></div></section></div></details><div class="tabgrid"><section class="panel">
+
+<details class="compact-fold" open=""><summary>02 · Carte polaire et couches</summary><div class="compact-body"><div class="bar" style="justify-content:space-between;margin-bottom:12px"><h2 style="margin:0">02 · Carte lunaire</h2><select id="layer" style="width:190px"><option value="terrain">Relief LOLA</option><option value="slope">Pente du terrain (°)</option><option value="earth">Visibilité Terre moyenne</option><option value="sun">Éclairement solaire moyen</option><option value="psr">Ombres permanentes</option></select></div><div class="mapframe" id="map"><img alt="Relief lunaire LOLA" id="base" src="/api/polar-map"/><img alt="Couche NASA" id="overlay" src="/static/earth.png" style="display:none"/><svg aria-label="Grille polaire 85 à 90 degrés Sud" id="polarGrid" preserveaspectratio="none" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none" viewbox="0 0 1000 1000"><circle cx="500" cy="500" fill="none" r="500.00" stroke="#b8e9ff" stroke-opacity=".48" stroke-width="1.4"></circle><text fill="white" font-size="17" paint-order="stroke" stroke="#071321" stroke-width="3" text-anchor="end" x="972.0" y="482">85°S</text><circle cx="500" cy="500" fill="none" r="399.91" stroke="#b8e9ff" stroke-opacity=".48" stroke-width="1.4"></circle><text fill="white" font-size="17" paint-order="stroke" stroke="#071321" stroke-width="3" text-anchor="end" x="889.9" y="482">86°S</text><circle cx="500" cy="500" fill="none" r="299.88" stroke="#b8e9ff" stroke-opacity=".48" stroke-width="1.4"></circle><text fill="white" font-size="17" paint-order="stroke" stroke="#071321" stroke-width="3" text-anchor="end" x="789.9" y="482">87°S</text><circle cx="500" cy="500" fill="none" r="199.89" stroke="#b8e9ff" stroke-opacity=".48" stroke-width="1.4"></circle><text fill="white" font-size="17" paint-order="stroke" stroke="#071321" stroke-width="3" text-anchor="end" x="689.9" y="482">88°S</text><circle cx="500" cy="500" fill="none" r="99.94" stroke="#b8e9ff" stroke-opacity=".48" stroke-width="1.4"></circle><text fill="white" font-size="17" paint-order="stroke" stroke="#071321" stroke-width="3" text-anchor="end" x="589.9" y="482">89°S</text><line stroke="#b8e9ff" stroke-opacity=".43" stroke-width="1.3" x1="500" x2="500.00" y1="500" y2="0.00"></line><text dominant-baseline="middle" fill="white" font-size="18" paint-order="stroke" stroke="#071321" stroke-width="4" text-anchor="middle" x="500.00" y="38.00">0°</text><line stroke="#b8e9ff" stroke-opacity=".43" stroke-width="1.3" x1="500" x2="853.55" y1="500" y2="146.45"></line><text dominant-baseline="middle" fill="white" font-size="18" paint-order="stroke" stroke="#071321" stroke-width="4" text-anchor="middle" x="826.68" y="173.32">45°</text><line stroke="#b8e9ff" stroke-opacity=".43" stroke-width="1.3" x1="500" x2="1000.00" y1="500" y2="500.00"></line><text dominant-baseline="middle" fill="white" font-size="18" paint-order="stroke" stroke="#071321" stroke-width="4" text-anchor="middle" x="948.00" y="530.00">90°</text><line stroke="#b8e9ff" stroke-opacity=".43" stroke-width="1.3" x1="500" x2="853.55" y1="500" y2="853.55"></line><text dominant-baseline="middle" fill="white" font-size="18" paint-order="stroke" stroke="#071321" stroke-width="4" text-anchor="middle" x="826.68" y="826.68">135°</text><line stroke="#b8e9ff" stroke-opacity=".43" stroke-width="1.3" x1="500" x2="500.00" y1="500" y2="1000.00"></line><text dominant-baseline="middle" fill="white" font-size="18" paint-order="stroke" stroke="#071321" stroke-width="4" text-anchor="middle" x="500.00" y="962.00">180°</text><line stroke="#b8e9ff" stroke-opacity=".43" stroke-width="1.3" x1="500" x2="146.45" y1="500" y2="853.55"></line><text dominant-baseline="middle" fill="white" font-size="18" paint-order="stroke" stroke="#071321" stroke-width="4" text-anchor="middle" x="173.32" y="826.68">225°</text><line stroke="#b8e9ff" stroke-opacity=".43" stroke-width="1.3" x1="500" x2="0.00" y1="500" y2="500.00"></line><text dominant-baseline="middle" fill="white" font-size="18" paint-order="stroke" stroke="#071321" stroke-width="4" text-anchor="middle" x="52.00" y="530.00">270°</text><line stroke="#b8e9ff" stroke-opacity=".43" stroke-width="1.3" x1="500" x2="146.45" y1="500" y2="146.45"></line><text dominant-baseline="middle" fill="white" font-size="18" paint-order="stroke" stroke="#071321" stroke-width="4" text-anchor="middle" x="173.32" y="173.32">315°</text><circle cx="500" cy="500" fill="white" r="5"></circle><text fill="white" font-size="19" paint-order="stroke" stroke="#071321" stroke-width="4" x="513" y="526">90°S</text></svg><div id="marker"></div><div id="candidatePins" style="position:absolute;inset:0;pointer-events:none"></div></div><div class="bar" style="margin-top:10px;gap:12px"><label for="v11Opacity" style="margin:0">Opacité couche</label><input id="v11Opacity" type="range" min="0" max="100" value="75" style="width:130px;padding:0"><span id="v11OpacityValue">75 %</span></div><div id="v11Legend" class="sub" style="font-size:12px;margin:8px 0">Relief LOLA · altitude en mètres · ombrage topographique</div><div id="v111Scale" aria-live="polite" style="display:none;max-width:390px;margin:10px 0 12px;padding:10px 12px;border:1px solid #29445d;border-radius:10px;background:rgba(6,20,36,.65)">
+<div id="v111ScaleTitle" style="font-size:12px;font-weight:600;margin-bottom:7px">Échelle de la couche</div>
+<div id="v111ScaleBar" style="height:12px;border-radius:5px;border:1px solid rgba(255,255,255,.24)"></div>
+<div style="display:flex;justify-content:space-between;margin-top:5px;font-size:12px;color:#c5d9ea"><span id="v111Min">0 %</span><span id="v111Max">100 %</span></div>
+<div id="v111ScaleNote" style="font-size:11px;color:#a9bfd0;margin-top:7px"></div>
+</div><div class="mapcaption"><span>Projection stéréographique polaire sud · centre : 90°S</span><span>85°S–90°S · LOLA 120 m</span></div><div class="notice" style="margin-top:10px">Fond LOLA géoréférencé 85°S–90°S. Couches V11 superposées sur la grille polaire LOLA. Les zones transparentes indiquent une absence de couverture ou une zone non-PSR.</div></div></details><details class="compact-fold"><summary>03 · Classement intelligent des sites — V13</summary><div class="compact-body"><div class="bar" style="margin:0 0 14px"><button id="scanPole" type="button">Analyser la zone sélectionnée</button><span class="sub" id="scanStatus" style="font-size:12px">Classement multicritère sur données historiques, sans appel massif à JPL</span></div><div class="sub" id="scanResults" style="margin-bottom:12px">Aucun balayage effectué.</div></div></details><details class="compact-fold"><summary>04 · Ciel lunaire — Soleil et Terre</summary><div class="compact-body"><section aria-label="Positions Soleil et Terre" class="sky-panel"><h2>03 · Ciel lunaire · Soleil et Terre</h2><p class="note">Vue du ciel depuis le site sélectionné. Azimut : 0° nord, 90° est. Les distances au centre représentent les élévations, de l’horizon (bord) au zénith (centre).</p><div class="sky-layout"><canvas aria-label="Diagramme polaire du ciel et horizon topographique" height="600" id="skyCanvas" role="img" width="600"></canvas><div><div class="sky-readout"><div class="stat"><span>Soleil · élévation</span><b id="skySunEl">—</b><small id="skySunAz">Azimut —</small></div><div class="stat"><span>Terre · élévation</span><b id="skyEarthEl">—</b><small id="skyEarthAz">Azimut —</small></div><div class="stat"><span>Soleil</span><b id="skySunStatus">—</b></div><div class="stat"><span>Terre</span><b id="skyEarthStatus">—</b></div></div><label for="skyTimeSlider">Instant de la simulation (UTC)</label><input disabled="" id="skyTimeSlider" max="0" min="0" step="1" type="range" value="0"/><div class="sub" id="skyTimestamp" style="margin:8px 0 14px">Lance une simulation pour afficher les positions.</div><div class="bar"><button class="secondary" disabled="" id="skyPrev" type="button">← Précédent</button><button class="secondary" disabled="" id="skyNext" type="button">Suivant →</button></div><p class="notice" style="margin-top:16px">Ligne turquoise : horizon topographique LOLA approximatif. Les objets sous cet horizon sont masqués. La projection ne représente pas la taille apparente du Soleil ou de la Terre.</p></div></div></section></div></details><details class="compact-fold"><summary>05 · Évolution temporelle et animation</summary><div class="compact-body"><h2 style="margin-top:22px">04 · Évolution temporelle</h2><canvas height="230" id="chart" width="900"></canvas><div class="v10-controls"><button disabled="" id="v10Play" type="button">▶ Lecture</button><button class="secondary" disabled="" id="v10Restart" type="button">↺ Début</button><label for="v10Speed" style="margin:0">Vitesse</label><select id="v10Speed"><option value="1000">1×</option><option selected="" value="400">2,5×</option><option value="150">6,7×</option></select><span class="sub" id="v10PlayStatus">Lance une simulation pour activer la lecture.</span></div><div class="sub" style="font-size:12px;margin-top:6px">Courbes : élévation solaire (ambre) et terrestre (bleu). Les points tiennent compte de l'horizon topographique pour les états visibles/masqués.</div><div id="timeline" style="margin-top:12px"></div></div></details><details class="compact-fold"><summary>06 · Fenêtres opérationnelles</summary><div class="compact-body"><div class="v10-timeline"><h2>05 · Fenêtres opérationnelles</h2><p class="sub">États aux instants échantillonnés ; les transitions entre deux mesures sont approximatives.</p><div class="v10-windows"><div class="v10-window"><span class="sub">Soleil visible</span><b id="v10SunPct">—</b></div><div class="v10-window"><span class="sub">Terre visible</span><b id="v10EarthPct">—</b></div><div class="v10-window"><span class="sub">Soleil + Terre</span><b id="v10BothPct">—</b></div></div><div aria-label="Chronologie cliquable" class="v10-track" id="v10Track" role="group"><div class="v10-cursor" id="v10Cursor" style="left:0%"></div></div><div class="bar" style="justify-content:space-between"><small id="v10Start">Début : —</small><small id="v10End">Fin : —</small></div><div class="v10-legend"><span><i class="v10-dot" style="background:#31b8a2"></i>Soleil et Terre</span><span><i class="v10-dot" style="background:#e5a84a"></i>Soleil seul</span><span><i class="v10-dot" style="background:#478ec6"></i>Terre seule</span><span><i class="v10-dot" style="background:#354052"></i>Aucun</span></div><div class="sub" id="v10Windows" style="margin-top:14px">Aucune simulation chargée.</div></div></div></details><details class="compact-fold" id="v12Panel"><summary>07 · Énergie et communications — V12</summary><div class="compact-body"><h2>Budget énergétique et visibilité de la Terre</h2><p class="sub">Modèle exploratoire alimenté par la simulation du site sélectionné. Paramètres modifiables pour un atterrisseur fictif.</p>
+<div class="v12-inputs"><div><label for="v12Solar">Puissance solaire nominale (W)</label><input id="v12Solar" type="number" min="0" max="100000" step="10" value="500"></div><div><label for="v12Load">Consommation constante (W)</label><input id="v12Load" type="number" min="0" max="100000" step="10" value="200"></div><div><label for="v12Battery">Capacité batterie utile (Wh)</label><input id="v12Battery" type="number" min="0" max="10000000" step="100" value="2000"></div><div><label for="v12Initial">Charge initiale (%)</label><input id="v12Initial" type="number" min="0" max="100" step="5" value="100"></div><div><label for="v12Efficiency">Rendement global (%)</label><input id="v12Efficiency" type="number" min="1" max="100" step="5" value="80"></div><div><label for="v12MinElev">Élévation minimale pour production (°)</label><input id="v12MinElev" type="number" min="0" max="90" step="1" value="0"></div></div>
+<div class="bar" style="margin-top:14px"><button type="button" id="v12Calculate">Calculer le bilan</button><span class="sub" id="v12State">Lance d'abord une simulation dans Configuration de mission.</span></div>
+<div class="v12-results"><div class="v12-grid"><div class="v12-kpi"><span>Production solaire estimée</span><b id="v12Produced">—</b></div><div class="v12-kpi"><span>Énergie consommée</span><b id="v12Consumed">—</b></div><div class="v12-kpi"><span>Énergie batterie finale</span><b id="v12Final">—</b></div><div class="v12-kpi"><span>Autonomie sans soleil</span><b id="v12Autonomy">—</b></div><div class="v12-kpi"><span>Terre visible · durée estimée</span><b id="v12Earth">—</b></div><div class="v12-kpi"><span>Plus longue interruption Terre</span><b id="v12Blackout">—</b></div></div><label>Charge finale de la batterie (fraction de capacité utile)</label><div class="v12-energybar"><div id="v12BatteryBar"></div></div><p id="v12Warnings" class="v12-note">Résultats indicatifs, pas une étude de dimensionnement.</p></div>
+<p class="v12-note">Hypothèses : puissance nominale appliquée lorsque le Soleil est visible et au-dessus du seuil choisi, sans correction d'incidence des panneaux ; consommation constante ; batterie idéale sans pertes de charge/décharge, sauf rendement global appliqué à la production ; Terre visible = visibilité géométrique, sans garantie de liaison radio. Calcul par intervalles échantillonnés, changements d'état possibles entre échantillons.</p></div></details></section></div></section><section class="tabpage" id="page-comparetab"><div class="hero"><h2>Comparer les sites</h2><p class="sub">Ajoute des sites depuis la configuration située en haut de la page Explorer. Compare les résultats obtenus avec des paramètres identiques.</p></div><section class="panel" style="max-width:1100px;margin:0 auto"><h2 style="margin-top:22px">05 · Comparaison</h2><div class="sub" style="font-size:12px">Ajoute plusieurs sites puis lance une simulation pour chacun.</div><div id="compare" style="overflow-x:auto;margin-top:10px"><div class="sub">Aucun site enregistré.</div></div><div class="v14-tools"><button class="secondary" id="v14AddTop" type="button">Ajouter les 3 premiers du classement</button><button class="secondary" id="v14Export" type="button">Exporter CSV</button><span id="v14Status" class="sub">Compare les données historiques des candidats. Les simulations datées restent propres à chaque site.</span></div><div id="v14Charts"></div><button class="secondary" id="clear" style="margin-top:12px">Effacer la comparaison</button></section></section>
 <footer>NASA LOLA · PGDA Goddard · JPL Horizons · Prototype scientifique P0. Les résultats doivent être validés avant toute utilisation opérationnelle.</footer>
+
+<section class="tabpage" id="page-terrain3d">
+<div class="hero"><h2>V16 · Relief lunaire en 3D</h2><p class="sub">Reconstruction du relief à partir des altitudes LOLA 120 m/pixel, échantillonnées dans une fenêtre locale. Rotation, zoom et exagération verticale.</p></div>
+<div class="v16-shell"><div class="panel"><div class="v16-fields">
+<div><label for="v16Lat">Latitude (°)</label><input id="v16Lat" type="number" min="-90" max="-85" step="0.001" value="-86"></div>
+<div><label for="v16Lon">Longitude est (°)</label><input id="v16Lon" type="number" min="-180" max="180" step="0.001" value="0"></div>
+<div><label for="v16Size">Largeur de la zone</label><select id="v16Size"><option value="5">5 km</option><option value="12" selected>12 km</option><option value="20">20 km</option><option value="30">30 km</option></select></div>
+<div><label for="v16Exag">Exagération verticale : <output id="v16ExagVal">3×</output></label><input id="v16Exag" type="range" min="1" max="10" value="3" step="0.5"></div>
+</div><div class="bar" style="margin:14px 0"><button id="v16Load">Charger le relief LOLA</button><button id="v16FromExplore" class="secondary">Utiliser le site d'Explorer</button><button id="v16Reset" class="secondary">Réinitialiser la vue</button></div><p class="sub" id="v16Status" aria-live="polite">Charge une zone pour afficher son relief.</p>
+<div class="v16-view"><canvas id="v16Canvas" width="1100" height="650" aria-label="Vue 3D interactive du terrain lunaire"></canvas><span class="v16-hint">Glisser : rotation · Molette : zoom · Exagération : relief amplifié</span></div>
+<div class="v16-stats"><div class="stat"><span>Altitude minimale</span><b id="v16Min">—</b></div><div class="stat"><span>Altitude maximale</span><b id="v16Max">—</b></div><div class="stat"><span>Couverture des données</span><b id="v16Coverage">—</b></div></div>
+<p class="notice">Altitudes LOLA relatives au rayon lunaire de référence de 1 737,4 km. La grille 3D est décimée pour la visualisation ; elle ne représente pas les obstacles plus petits que le pas d'échantillonnage. L'exagération verticale n'altère pas les données d'origine. Hors couverture : aucune surface dessinée.</p>
+</div></div></section>
+<section class="tabpage" id="page-missions">
+ <div class="hero"><h2>V15 · Atlas des missions lunaires</h2><p class="sub">Explore les lieux d'alunissage historiques sur une carte globale schématique. Les coordonnées sont approximatives et le modèle scientifique LOLA de cette application reste limité à 85°S–90°S.</p></div>
+ <section class="panel v15-panel">
+ <div class="v15-controls"><label for="v15Filter">Programme</label><select id="v15Filter"><option value="all">Toutes les missions</option><option value="Apollo">Apollo</option><option value="Chine">Chine</option><option value="Inde">Inde</option><option value="URSS">URSS</option><option value="CLPS">CLPS / États-Unis</option></select><label for="v15Search">Rechercher</label><input id="v15Search" type="search" placeholder="Ex. Apollo 11, Chang'e, Luna…"></div>
+ <div class="v15-globes"><div><h3>Face proche · 0°</h3><svg id="v15Near" viewBox="0 0 420 420" role="img" aria-label="Carte schématique de la face proche de la Lune"></svg></div><div><h3>Face éloignée · 180°</h3><svg id="v15Far" viewBox="0 0 420 420" role="img" aria-label="Carte schématique de la face éloignée de la Lune"></svg></div></div>
+ <p class="v15-note">Carte orthographique schématique avec méridiens et parallèles, sans fond topographique. Les positions ne sont pas une validation géodésique. Clique sur un point ou une ligne pour afficher la fiche de mission.</p>
+ <div id="v15Detail" class="v15-detail" aria-live="polite">Sélectionne une mission pour afficher ses informations.</div>
+ <div class="v15-tablewrap"><table><thead><tr><th>Mission</th><th>Programme</th><th>Année</th><th>Latitude</th><th>Longitude</th><th>Zone polaire LOLA</th></tr></thead><tbody id="v15Rows"></tbody></table></div>
+ <p class="v15-note">Références pour vérification des coordonnées : <a href="https://science.nasa.gov/moon/" target="_blank" rel="noopener noreferrer">NASA Moon</a> · <a href="https://ode.rsl.wustl.edu/moon/" target="_blank" rel="noopener noreferrer">NASA Lunar ODE</a>. Le catalogue est pédagogique et non exhaustif. Les coordonnées approximatives doivent être recoupées avec les archives de mission avant usage scientifique.</p>
+ </section>
+</section>
 <script>
-const $=id=>document.getElementById(id),EXT=457440;let latest=null,selected=null,comparisons=[],eventsData=null,eventGeneration=0;
+const $=id=>document.getElementById(id),EXT=2*1737400*Math.tan(2.5*Math.PI/180);let latest=null,selected=null,comparisons=[],eventsData=null,eventGeneration=0;
 function projection(lat,lon){let R=1737400,phi=lat*Math.PI/180,lambda=lon*Math.PI/180,rho=2*R*Math.tan(Math.PI/4+phi/2);return {x:rho*Math.sin(lambda),y:rho*Math.cos(lambda)}}
 function unprojection(x,y){let rho=Math.hypot(x,y),lat=-(90-2*Math.atan(rho/(2*1737400))*180/Math.PI),lon=Math.atan2(x,y)*180/Math.PI;return {lat,lon}}
 function mark(){let {x,y}=projection(+$('lat').value,+$('lon').value);$('marker').style.left=(50+x/(2*EXT)*100)+'%';$('marker').style.top=(50-y/(2*EXT)*100)+'%'}
@@ -118,13 +287,23 @@ function msg(t){$('message').textContent=t}
 async function post(url,payload){let r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});let j=await r.json();if(!r.ok)throw Error(typeof j.detail==='string'?j.detail:JSON.stringify(j.detail));return j}
 function sitePayload(){return {lat:+$('lat').value,lon:+$('lon').value}}
 async function locate(){eventGeneration++;eventsData=null;renderCountdowns();mark();latest=null;resetSim();try{selected=await post('/api/site',sitePayload());$('alt').textContent=selected.alt_m===null?'Indisponible':selected.alt_m.toLocaleString('fr-FR')+' m';for(let k of ['sun','earth'])$(k+'val').textContent=selected.layers[k]===null?'Hors couverture':(selected.layers[k]*100).toFixed(1)+' %';$('psrval').textContent=selected.layers.psr===null?'Hors couverture':selected.layers.psr>.5?'Oui':'Non';msg('Données NASA chargées pour '+selected.lat.toFixed(3)+'° / '+selected.lon.toFixed(3)+'°. Lance la simulation pour les éphémérides datées.');loadEvents()}catch(e){msg('Erreur : '+e.message)}}
-function resetSim(){for(let k of ['sunpct','earthpct','bothpct','sunset'])$(k).textContent='—';$('timeline').innerHTML='';let c=$('chart').getContext('2d');c.clearRect(0,0,900,230)}
+function resetSim(){skyIndex=0;$('skyTimeSlider').disabled=true;$('skyPrev').disabled=true;$('skyNext').disabled=true;$('skyTimestamp').textContent='Lance une simulation pour afficher les positions.';for(const id of ['skySunEl','skySunAz','skyEarthEl','skyEarthAz','skySunStatus','skyEarthStatus'])$(id).textContent='—';skyFrame();for(let k of ['sunpct','earthpct','bothpct','sunset'])$(k).textContent='—';$('timeline').innerHTML='';let c=$('chart').getContext('2d');c.clearRect(0,0,900,230)}
 function plot(rows){let canvas=$('chart'),ctx=canvas.getContext('2d'),W=900,H=230;ctx.clearRect(0,0,W,H);ctx.fillStyle='#0b1423';ctx.fillRect(0,0,W,H);let left=44,right=W-15,top=18,bottom=H-26,min=-25,max=40;let yy=v=>bottom-(v-min)/(max-min)*(bottom-top);ctx.strokeStyle='#35435b';ctx.lineWidth=1;for(let val=-20;val<=40;val+=10){let y=yy(val);ctx.beginPath();ctx.moveTo(left,y);ctx.lineTo(right,y);ctx.stroke();ctx.fillStyle='#8fa1b9';ctx.font='12px Arial';ctx.fillText(val+'°',7,y+4)}for(let [key,color] of [['sun','#ffbd5d'],['earth','#70aaff']]){ctx.strokeStyle=color;ctx.lineWidth=2.4;ctx.beginPath();rows.forEach((r,i)=>{let x=left+(right-left)*i/Math.max(1,rows.length-1),y=yy(r[key].el);i?ctx.lineTo(x,y):ctx.moveTo(x,y)});ctx.stroke()}ctx.fillStyle='#9aacbf';ctx.fillText(rows[0].time.slice(0,16).replace('T',' '),left,bottom+18);ctx.fillText(rows.at(-1).time.slice(0,16).replace('T',' '),right-110,bottom+18)}
-function displaySimulation(d){latest=d;for(let k of ['sun','earth','both'])$(k+'pct').textContent=d.summary[k+'_percent']+' %';let rows=d.series,idx=rows.findIndex((r,i)=>i>0&&rows[i-1].sun.visible&&!r.sun.visible);$('sunset').textContent=idx<0?'Non observé sur la période':rows[idx].time.replace('T',' ').slice(0,16)+' UTC';plot(rows);$('timeline').innerHTML='<table><thead><tr><th>UTC</th><th>Soleil élév.</th><th>Soleil</th><th>Terre élév.</th><th>Terre</th></tr></thead><tbody>'+rows.map(r=>`<tr><td>${r.time.slice(0,16).replace('T',' ')}</td><td>${r.sun.el.toFixed(2)}°</td><td>${r.sun.visible?'Visible':'Masqué'}</td><td>${r.earth.el.toFixed(2)}°</td><td>${r.earth.visible?'Visible':'Masquée'}</td></tr>`).join('')+'</tbody></table>'}
+function displaySimulation(d){latest=d;skyLoad();for(let k of ['sun','earth','both'])$(k+'pct').textContent=d.summary[k+'_percent']+' %';let rows=d.series,idx=rows.findIndex((r,i)=>i>0&&rows[i-1].sun.visible&&!r.sun.visible);$('sunset').textContent=idx<0?'Non observé sur la période':rows[idx].time.replace('T',' ').slice(0,16)+' UTC';plot(rows);$('timeline').innerHTML='<table><thead><tr><th>UTC</th><th>Soleil élév.</th><th>Soleil</th><th>Terre élév.</th><th>Terre</th></tr></thead><tbody>'+rows.map(r=>`<tr><td>${r.time.slice(0,16).replace('T',' ')}</td><td>${r.sun.el.toFixed(2)}°</td><td>${r.sun.visible?'Visible':'Masqué'}</td><td>${r.earth.el.toFixed(2)}°</td><td>${r.earth.visible?'Visible':'Masquée'}</td></tr>`).join('')+'</tbody></table>'}
 async function run(){let b=$('run');b.disabled=true;msg('Interrogation JPL Horizons et calcul du relief en cours…');try{let d=await post('/api/simulate',{...sitePayload(),date:$('date').value,hours:+$('hours').value,step:+$('step').value});displaySimulation(d);msg('Simulation calculée : '+d.series.length+' instants. Pourcentages échantillonnés ; horizon topographique approximatif.')}catch(e){msg('Simulation indisponible : '+e.message+'\nLa carte et les données moyennes restent utilisables.')}finally{b.disabled=false}}
 function comparison(){if(!comparisons.length){$('compare').innerHTML='<div class="sub">Aucun site enregistré.</div>';return}$('compare').innerHTML='<table><thead><tr><th>Site</th><th>Altitude</th><th>Soleil</th><th>Terre</th><th>Les deux</th></tr></thead><tbody>'+comparisons.map((c,i)=>`<tr><td>${i+1}. ${c.lat.toFixed(2)}°, ${c.lon.toFixed(2)}°</td><td>${c.alt===null?'—':c.alt.toFixed(0)+' m'}</td><td>${c.sun??'—'}</td><td>${c.earth??'—'}</td><td>${c.both??'—'}</td></tr>`).join('')+'</tbody></table>'}
-$('map').addEventListener('click',e=>{let r=$('map').getBoundingClientRect(),x=((e.clientX-r.left)/r.width-.5)*2*EXT,y=(.5-(e.clientY-r.top)/r.height)*2*EXT,p=unprojection(x,y);if(p.lat< -90||p.lat> -75){msg('Sélection hors zone LOLA (75°S–90°S).');return}$('lat').value=p.lat.toFixed(4);$('lon').value=p.lon.toFixed(4);locate()});$('locate').onclick=locate;$('run').onclick=run;
-document.querySelectorAll('.sitebtn').forEach(b=>b.onclick=()=>{$('lat').value=b.dataset.lat;$('lon').value=b.dataset.lon;locate()});$('layer').onchange=e=>{let v=e.target.value,im=$('overlay');im.style.display=v==='terrain'?'none':'block';if(v!=='terrain'){im.src='/static/'+v+'.png';im.className=v==='sun'||v==='psr'?'small':'';im.style.opacity=v==='psr'?'.9':'.65'}};
+$('map').addEventListener('click',e=>{let r=$('map').getBoundingClientRect(),x=((e.clientX-r.left)/r.width-.5)*2*EXT,y=(.5-(e.clientY-r.top)/r.height)*2*EXT,p=unprojection(x,y);if(p.lat< -90||p.lat> -85){msg('Sélection hors carte (85°S–90°S).');return}$('lat').value=p.lat.toFixed(4);$('lon').value=p.lon.toFixed(4);locate()});$('locate').onclick=locate;$('run').onclick=run;
+document.querySelectorAll('.sitebtn').forEach(b=>b.onclick=()=>{$('lat').value=b.dataset.lat;$('lon').value=b.dataset.lon;locate()});const v11Legends={terrain:'Relief LOLA · altitude (m) · ombrage topographique',slope:'Pente LOLA estimée · vert : 0° · orange/rouge : ≥ 20° · résolution 120 m',earth:'Visibilité terrestre historique · bleu foncé : 0 % · cyan : 100 % · moyenne historique, pas une prévision',sun:'Éclairement solaire historique · brun : 0 % · jaune : 100 % · source 75°S–90°S (120 m/px) · carte affichée 85°S–90°S',psr:'Zones d’ombre permanente (PSR) · violet : PSR · transparent : hors PSR ou hors couverture'};
+const v111Scales={
+ slope:{title:'Pente locale estimée (degrés)',gradient:'linear-gradient(to right,rgb(55,205,140),rgb(255,65,40))',min:'0°',max:'≥ 20°',note:'Couleurs saturées au-delà de 20° · estimation LOLA 120 m/pixel.'},
+ earth:{title:'Visibilité historique de la Terre',gradient:'linear-gradient(to right,rgb(35,85,160),rgb(70,230,245))',min:'0 %',max:'100 %',note:'Moyenne historique sur 18,6 ans · pas une prévision à une date donnée.'},
+ sun:{title:'Éclairement solaire moyen historique',gradient:'linear-gradient(to right,rgb(110,50,35),rgb(255,210,90))',min:'0 %',max:'100 %',note:'Source NASA 75°S–90°S, 120 m/pixel · affichage 85°S–90°S · moyenne historique.'},
+ psr:{title:'Régions d’ombre permanente',gradient:'linear-gradient(to right,rgb(180,75,245),rgb(180,75,245))',min:'Violet : PSR',max:'Transparent : non-PSR ou sans données',note:'Couche binaire ; la transparence ne distingue pas absence de PSR et absence de couverture.'}
+};
+function v111UpdateScale(v){const el=$('v111Scale'),d=v111Scales[v];el.style.display=d?'block':'none';if(!d)return;$('v111ScaleTitle').textContent=d.title;$('v111ScaleBar').style.background=d.gradient;$('v111Min').textContent=d.min;$('v111Max').textContent=d.max;$('v111ScaleNote').textContent=d.note;}
+function v11Layer(){const v=$('layer').value,im=$('overlay');$('v11Legend').textContent=v11Legends[v];v111UpdateScale(v);if(v==='terrain'){im.style.display='none';return}im.onload=()=>{im.style.display='block'};im.onerror=()=>{im.style.display='none';$('v11Legend').textContent='Couche indisponible : vérifie les fichiers NASA dans data/ et le serveur V11.'};im.src='/api/map-layer/'+v;im.style.opacity=Number($('v11Opacity').value)/100;}
+$('layer').onchange=v11Layer;
+$('v11Opacity').oninput=()=>{$('v11OpacityValue').textContent=$('v11Opacity').value+' %';$('overlay').style.opacity=Number($('v11Opacity').value)/100};
 $('add').onclick=()=>{if(!selected){msg('Sélectionne d’abord un site.');return}let c={lat:selected.lat,lon:selected.lon,alt:selected.alt_m,sun:latest?.summary.sun_percent===undefined?null:latest.summary.sun_percent+' %',earth:latest?.summary.earth_percent===undefined?null:latest.summary.earth_percent+' %',both:latest?.summary.both_percent===undefined?null:latest.summary.both_percent+' %'};comparisons.push(c);comparison();msg('Site ajouté. Pour comparer les conditions temporelles, simule chaque site avec les mêmes dates et paramètres.')};$('clear').onclick=()=>{comparisons=[];comparison()};
 
 function utcNowInput(){
@@ -187,6 +366,19 @@ function showTab(key){
 }
 document.querySelectorAll('nav.tabs button').forEach(b=>b.addEventListener('click',()=>showTab(b.dataset.tab)));
 $('goExplore').addEventListener('click',()=>showTab('explore'));
+$('homeStartExplore').addEventListener('click',()=>showTab('explore'));
+$('homeStartCompare').addEventListener('click',()=>showTab('comparetab'));
+$('homeMapExplore').addEventListener('click',()=>showTab('explore'));
+function updateHomeMap(){
+  const lat=selected?.lat??Number($('lat').value),lon=selected?.lon??Number($('lon').value);
+  if(!Number.isFinite(lat)||!Number.isFinite(lon))return;
+  const point=projection(lat,lon),dot=$('homeMapDot');
+  const inside=lat>=-90&&lat<=-85;
+  dot.style.display=inside?'block':'none';
+  if(inside){dot.style.left=(50+point.x/(2*EXT)*100)+'%';dot.style.top=(50-point.y/(2*EXT)*100)+'%'}
+  $('homeMapCoords').textContent=Math.abs(lat).toFixed(3)+'°S / '+Math.abs(lon).toFixed(3)+'°'+(lon<0?'W':'E');
+}
+
 const originalLocate=locate;
 // Actualiser la synthèse de l'accueil après chaque chargement du site.
 const homeObserver=new MutationObserver(()=>{
@@ -194,9 +386,11 @@ const homeObserver=new MutationObserver(()=>{
     $('homeCoords').textContent=selected.lat.toFixed(3)+'° / '+selected.lon.toFixed(3)+'°';
     $('homeAlt').textContent=selected.alt_m===null?'Indisponible':selected.alt_m.toLocaleString('fr-FR')+' m';
     $('homeSlope').textContent=selected.slope_deg===null?'Indisponible':selected.slope_deg.toFixed(2)+'°';
+    updateHomeMap();
   }
 });
 homeObserver.observe($('alt'),{childList:true,characterData:true,subtree:true});
+updateHomeMap();
 const weightIds=['weightSun','weightEarth','weightTerrain'];
 const outputIds=['outSun','outEarth','outTerrain'];
 const defaults=[33,33,34];
@@ -227,23 +421,291 @@ function showCandidate(site){
 function renderScan(){
   if(!scanData)return;
   const sites=scanData.sites;
-  const rows=sites.map((s,i)=>`<tr><td>${i+1}</td><td><button class="secondary" style="padding:6px 9px" data-candidate="${i}">${s.lat.toFixed(3)}° / ${s.lon.toFixed(3)}°</button></td><td>${s.score.toFixed(1)}</td><td>${s.slope_deg.toFixed(2)}°</td><td>${s.earth_historical_percent.toFixed(1)} %</td></tr>`).join('');
-  const table=sites.length?`<div style="overflow-x:auto"><table><thead><tr><th>#</th><th>Coordonnées</th><th>Score provisoire</th><th>Pente</th><th>Terre historique</th></tr></thead><tbody>${rows}</tbody></table></div>`:'Aucun point admissible avec ces contraintes.';
-  $('scanResults').innerHTML=`<p class="sub">${scanData.eligible_points.toLocaleString('fr-FR')} points admissibles · zone ${Math.abs(scanData.north_limit_lat)}°S–90°S · grille ${scanData.spacing_km} km · classement Terre/terrain uniquement.</p>`+table;
-  $('homeRanking').innerHTML=sites.slice(0,5).map((s,i)=>`<div class="stat"><span>Candidat ${i+1} · score provisoire ${s.score.toFixed(1)}/100</span><b style="font-size:15px">${s.lat.toFixed(3)}° / ${s.lon.toFixed(3)}°</b><button class="secondary" style="margin-top:7px;padding:7px 10px" data-candidate="${i}">Étudier ce site</button></div>`).join('')||'Aucun candidat.';
-  $('candidatePins').innerHTML=sites.map((s,i)=>`<div title="Candidat ${i+1} · ${s.score}/100" style="position:absolute;left:${50+s.x/(2*EXT)*100}%;top:${50-s.y/(2*EXT)*100}%;transform:translate(-50%,-50%);width:10px;height:10px;border-radius:50%;border:1px solid white;background:#37d9b5;box-shadow:0 0 0 2px #082e35"></div>`).join('');
+  const pct=v=>v===null||v===undefined?'N/D':Number(v).toFixed(1)+' %';
+  const rows=sites.map((s,i)=>`<tr><td>${i+1}</td><td><button class="secondary" style="padding:6px 9px" data-candidate="${i}">${s.lat.toFixed(3)}° / ${s.lon.toFixed(3)}°</button></td><td><b>${s.score.toFixed(1)}</b></td><td>${s.slope_deg.toFixed(2)}°</td><td>${pct(s.sun_historical_percent)}</td><td>${pct(s.earth_historical_percent)}</td><td><details><summary>Voir</summary><div style="min-width:230px;font-size:12px;line-height:1.8">Soleil : ${s.score_contributions.sun.toFixed(1)} points<br>Terre : ${s.score_contributions.earth.toFixed(1)} points<br>Terrain : ${s.score_contributions.terrain.toFixed(1)} points<br>Terrain brut : ${s.terrain_score.toFixed(1)}/100<br>Altitude : ${s.alt_m.toFixed(1)} m</div></details></td></tr>`).join('');
+  const table=sites.length?`<div style="overflow-x:auto"><table><thead><tr><th>#</th><th>Coordonnées</th><th>Score /100</th><th>Pente</th><th>Soleil historique</th><th>Terre historique</th><th>Explication</th></tr></thead><tbody>${rows}</tbody></table></div>`:'Aucun point admissible avec ces contraintes.';
+  const w=scanData.scoring_weights;
+  $('scanResults').innerHTML=`<p class="sub">${scanData.eligible_points.toLocaleString('fr-FR')} candidats admissibles · ${Math.abs(scanData.north_limit_lat)}°S–90°S · grille ${scanData.spacing_km} km · poids : Soleil ${(100*w.sun).toFixed(0)} %, Terre ${(100*w.earth).toFixed(0)} %, terrain ${(100*w.terrain).toFixed(0)} % · ${scanData.excluded_psr_points} points PSR exclus · ${scanData.missing_coverage_points} points sans couverture suffisante.</p>`+table+`<p class="notice" style="margin-top:12px">${scanData.warnings.join(' ')}</p>`;
+  $('homeRanking').innerHTML=sites.slice(0,5).map((s,i)=>`<div class="stat"><span>Candidat ${i+1} · score exploratoire ${s.score.toFixed(1)}/100</span><b style="font-size:15px">${s.lat.toFixed(3)}° / ${s.lon.toFixed(3)}°</b><button class="secondary" style="margin-top:7px;padding:7px 10px" data-candidate="${i}">Étudier ce site</button></div>`).join('')||'Aucun candidat.';
+  $('candidatePins').innerHTML=sites.filter(s=>Math.hypot(s.x,s.y)<=EXT).map((s,i)=>`<div title="Candidat ${i+1} · ${s.score}/100" style="position:absolute;left:${50+s.x/(2*EXT)*100}%;top:${50-s.y/(2*EXT)*100}%;transform:translate(-50%,-50%);width:10px;height:10px;border-radius:50%;border:1px solid white;background:#37d9b5;box-shadow:0 0 0 2px #082e35"></div>`).join('');
   document.querySelectorAll('[data-candidate]').forEach(b=>b.addEventListener('click',()=>showCandidate(sites[Number(b.dataset.candidate)])));
 }
 $('scanPole').addEventListener('click',async()=>{
   const b=$('scanPole');b.disabled=true;
   $('scanStatus').textContent='Analyse en cours…';
   try{
-    const data=await post('/api/scan',{north_limit_lat:Number($('northLimit').value),spacing_km:Number($('scanSpacing').value),max_slope:Number($('maxSlope').value),weight_sun:Number($('weightSun').value),weight_earth:Number($('weightEarth').value),weight_terrain:Number($('weightTerrain').value)});
+    const data=await post('/api/scan',{north_limit_lat:Number($('northLimit').value),spacing_km:Number($('scanSpacing').value),max_slope:Number($('maxSlope').value),weight_sun:Number($('weightSun').value),weight_earth:Number($('weightEarth').value),weight_terrain:Number($('weightTerrain').value),exclude_psr:$('v13ExcludePsr').checked});
     scanData=data;renderScan();
-    $('scanStatus').textContent=`Terminé : ${data.eligible_points.toLocaleString('fr-FR')} candidats admissibles entre ${Math.abs(data.north_limit_lat)}°S et 90°S. Soleil non noté.`;
+    $('scanStatus').textContent=`Terminé : ${data.eligible_points.toLocaleString('fr-FR')} candidats admissibles entre ${Math.abs(data.north_limit_lat)}°S et 90°S. Classement multicritère V13.`;
   }catch(e){$('scanStatus').textContent='Erreur : '+e.message;}
   finally{b.disabled=false;}
 });
 
+
+// V9 : diagramme du ciel local à partir de /api/simulate.
+let skyIndex=0;
+function skyStatus(obj){return obj.visible?'Visible':'Masqué'}
+function skyFrame(){
+  const canvas=$('skyCanvas'),ctx=canvas.getContext('2d'),W=600,c=W/2,r=242;
+  ctx.clearRect(0,0,W,W);ctx.fillStyle='#071322';ctx.fillRect(0,0,W,W);
+  const polar=(az,el)=>{const a=az*Math.PI/180;const d=r*(90-Math.max(-15,Math.min(90,el)))/90;return [c+d*Math.sin(a),c-d*Math.cos(a)]};
+  ctx.strokeStyle='#28465e';ctx.lineWidth=1;
+  for(const elevation of [0,30,60]){ctx.beginPath();ctx.arc(c,c,r*(90-elevation)/90,0,2*Math.PI);ctx.stroke()}
+  for(let az=0;az<360;az+=45){const [x,y]=polar(az,0);ctx.beginPath();ctx.moveTo(c,c);ctx.lineTo(x,y);ctx.stroke()}
+  ctx.font='17px Arial';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='#bed9e9';
+  for(const [az,label] of [[0,'N 0°'],[90,'E 90°'],[180,'S 180°'],[270,'O 270°']]){const [x,y]=polar(az,-11);ctx.fillText(label,x,y)}
+  ctx.fillText('90°',c,c-8);
+  if(!latest||!latest.series?.length){ctx.fillStyle='#a8c0d8';ctx.fillText('Simulation non lancée',c,c+35);return}
+  const row=latest.series[skyIndex],h=latest.horizon||[];
+  if(h.length){
+    // Horizon apparent : son rayon varie avec l'élévation du relief.
+    ctx.beginPath();h.forEach((el,i)=>{const [x,y]=polar(i*360/h.length,el);if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y)});ctx.closePath();
+    ctx.strokeStyle='#67e2d6';ctx.lineWidth=2.5;ctx.stroke();
+  }
+  for(const [name,color] of [['sun','#ffc16b'],['earth','#70bdff']]){
+    const o=row[name];if(!Number.isFinite(o.az)||!Number.isFinite(o.el))continue;
+    const [x,y]=polar(o.az,o.el);
+    ctx.setLineDash([5,6]);ctx.strokeStyle=color;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(c,c);ctx.lineTo(x,y);ctx.stroke();ctx.setLineDash([]);
+    ctx.globalAlpha=o.visible?1:.45;ctx.fillStyle=color;ctx.beginPath();ctx.arc(x,y,name==='sun'?10:9,0,2*Math.PI);ctx.fill();ctx.strokeStyle='white';ctx.lineWidth=2;ctx.stroke();ctx.globalAlpha=1;
+  }
+  $('skySunEl').textContent=row.sun.el.toFixed(2)+'°';$('skySunAz').textContent='Azimut '+row.sun.az.toFixed(2)+'°';
+  $('skyEarthEl').textContent=row.earth.el.toFixed(2)+'°';$('skyEarthAz').textContent='Azimut '+row.earth.az.toFixed(2)+'°';
+  $('skySunStatus').textContent=skyStatus(row.sun);$('skyEarthStatus').textContent=skyStatus(row.earth);
+  $('skyTimestamp').textContent=new Date(row.time).toISOString().slice(0,16).replace('T',' ')+' UTC · '+(skyIndex+1)+' / '+latest.series.length;
+}
+function skyLoad(){skyIndex=0;const n=latest?.series?.length||0;$('skyTimeSlider').max=Math.max(0,n-1);$('skyTimeSlider').value=0;
+  for(const id of ['skyTimeSlider','skyPrev','skyNext'])$(id).disabled=n<2;
+  skyFrame();
+}
+$('skyTimeSlider').addEventListener('input',e=>{skyIndex=Number(e.target.value);skyFrame()});
+$('skyPrev').addEventListener('click',()=>{skyIndex=Math.max(0,skyIndex-1);$('skyTimeSlider').value=skyIndex;skyFrame()});
+$('skyNext').addEventListener('click',()=>{skyIndex=Math.min(latest.series.length-1,skyIndex+1);$('skyTimeSlider').value=skyIndex;skyFrame()});
+skyFrame();
+
+
+// V10 : lecture synchronisée et fenêtres d'observation échantillonnées.
+let v10Timer=null;
+function v10Stop(){if(v10Timer!==null){clearInterval(v10Timer);v10Timer=null}$('v10Play').textContent='▶ Lecture'}
+function v10SetIndex(index){if(!latest?.series?.length)return;skyIndex=Math.max(0,Math.min(latest.series.length-1,index));$('skyTimeSlider').value=skyIndex;skyFrame();$('v10Cursor').style.left=(100*skyIndex/Math.max(1,latest.series.length-1))+'%';}
+function v10Reset(){v10Stop();$('v10Track').querySelectorAll('.v10-segment').forEach(e=>e.remove());$('v10Cursor').style.left='0%';for(const id of ['v10SunPct','v10EarthPct','v10BothPct'])$(id).textContent='—';$('v10Windows').textContent='Aucune simulation chargée.';$('v10Start').textContent='Début : —';$('v10End').textContent='Fin : —';$('v10Play').disabled=true;$('v10Restart').disabled=true;$('v10PlayStatus').textContent='Lance une simulation pour activer la lecture.'}
+function v10Load(){v10Stop();const rows=latest?.series||[];if(!rows.length){v10Reset();return}const track=$('v10Track');track.querySelectorAll('.v10-segment').forEach(e=>e.remove());const frag=document.createDocumentFragment();const counts=[0,0,0];let windows=[],start=-1;
+  rows.forEach((r,i)=>{const a=!!r.sun.visible,b=!!r.earth.visible,state=(a?2:0)+(b?1:0);counts[0]+=a;counts[1]+=b;counts[2]+=a&&b;const seg=document.createElement('div');seg.className='v10-segment';seg.dataset.state=state;seg.title=r.time+' UTC · '+(['Aucun','Terre seule','Soleil seul','Soleil et Terre'][state]);seg.addEventListener('click',()=>{v10Stop();v10SetIndex(i)});frag.appendChild(seg);if(a&&b&&start<0)start=i;if((!a||!b)&&start>=0){windows.push([start,i-1]);start=-1}});if(start>=0)windows.push([start,rows.length-1]);track.insertBefore(frag,$('v10Cursor'));
+  const fmt=t=>new Date(t).toISOString().slice(0,16).replace('T',' ')+' UTC';$('v10Start').textContent='Début : '+fmt(rows[0].time);$('v10End').textContent='Fin : '+fmt(rows[rows.length-1].time);
+  ['v10SunPct','v10EarthPct','v10BothPct'].forEach((id,i)=>$(id).textContent=(100*counts[i]/rows.length).toFixed(1)+' %');
+  $('v10Windows').textContent=windows.length?'Fenêtres simultanées (bornes échantillonnées) : '+windows.slice(0,8).map(([a,b])=>fmt(rows[a].time)+' → '+fmt(rows[b].time)).join(' | ')+(windows.length>8?' | …':''):'Aucune fenêtre simultanée détectée sur la période.';
+  $('v10Play').disabled=rows.length<2;$('v10Restart').disabled=false;$('v10PlayStatus').textContent=rows.length+' instants · cliquez sur la frise pour vous déplacer';v10SetIndex(0);
+}
+$('v10Play').addEventListener('click',()=>{if(v10Timer!==null){v10Stop();return}if(!latest?.series?.length)return;if(skyIndex>=latest.series.length-1)v10SetIndex(0);$('v10Play').textContent='Ⅱ Pause';v10Timer=setInterval(()=>{if(skyIndex>=latest.series.length-1){v10Stop();return}v10SetIndex(skyIndex+1)},Number($('v10Speed').value))});
+$('v10Restart').addEventListener('click',()=>{v10Stop();v10SetIndex(0)});
+$('v10Speed').addEventListener('change',()=>{if(v10Timer!==null){v10Stop();$('v10Play').click()}});
+$('skyTimeSlider').addEventListener('input',()=>{v10Stop();v10SetIndex(skyIndex)});
+$('skyPrev').addEventListener('click',()=>{v10Stop();v10SetIndex(skyIndex)});
+$('skyNext').addEventListener('click',()=>{v10Stop();v10SetIndex(skyIndex)});
+const v10OriginalReset=resetSim;resetSim=function(){v10Reset();v10OriginalReset()};
+const v10OriginalDisplay=displaySimulation;displaySimulation=function(data){v10OriginalDisplay(data);v10Load()};
+v10Reset();
+
 fetch('/api/status').then(r=>r.json()).then(j=>{$('health').textContent=j.dem?'Données LOLA prêtes':'DEM manquant'}).catch(()=>{$('health').textContent='Service indisponible'});locate();
-</script></body></html>
+</script><script>
+// V10.1: plusieurs panneaux peuvent rester ouverts simultanément.
+(function(){
+ const page=document.getElementById('page-explore');
+ const folds=()=>Array.from(page.querySelectorAll('details.compact-fold'));
+ page.querySelectorAll('[data-compact-action]').forEach(button=>{
+  button.addEventListener('click',()=>{
+   const open=button.dataset.compactAction==='open';
+   folds().forEach(d=>d.open=open);
+  });
+ });
+})();
+</script><script>
+// V12 : post-traitement local des séries V11, sans modifier les routes du serveur.
+(function(){
+ const el=id=>document.getElementById(id);
+ const num=(id,min,max)=>{const v=Number(el(id).value);return Number.isFinite(v)&&v>=min&&v<=max?v:null};
+ const fmt=(v,unit)=>Number.isFinite(v)?v.toLocaleString('fr-FR',{maximumFractionDigits:1})+' '+unit:'—';
+ function calc(){
+  if(typeof latest==='undefined'||!latest||!Array.isArray(latest.series)||latest.series.length<2){el('v12State').textContent='Simulation nécessaire : clique sur « Lancer la simulation ». ';return;}
+  const solar=num('v12Solar',0,100000),load=num('v12Load',0,100000),cap=num('v12Battery',0,10000000),initial=num('v12Initial',0,100),eff=num('v12Efficiency',1,100),minEl=num('v12MinElev',0,90);
+  if([solar,load,cap,initial,eff,minEl].some(v=>v===null)){el('v12State').textContent='Vérifie les paramètres numériques.';return;}
+  let battery=cap*initial/100,produced=0,consumed=0,earthHours=0,blackout=0,run=0,unserved=0,lowest=battery,total=0;
+  const rows=latest.series;
+  for(let i=0;i<rows.length-1;i++){
+   const a=rows[i],b=rows[i+1],dt=(new Date(b.time)-new Date(a.time))/3600000;
+   if(!Number.isFinite(dt)||dt<=0||dt>48){el('v12State').textContent='Dates de simulation invalides.';return;}
+   // État au début de l'intervalle : approximation de maintien d'ordre zéro.
+   const sun=!!a.sun.visible&&Number(a.sun.el)>=minEl;
+   const earth=!!a.earth.visible;
+   const gain=(sun?solar*eff/100:0)*dt,usage=load*dt;
+   produced+=gain;consumed+=usage;total+=dt;
+   const available=battery+gain-usage;
+   if(available<0)unserved+=-available;
+   battery=Math.min(cap,Math.max(0,available));lowest=Math.min(lowest,battery);
+   if(earth){earthHours+=dt;blackout=Math.max(blackout,run);run=0;}else run+=dt;
+  }
+  blackout=Math.max(blackout,run);
+  el('v12Produced').textContent=fmt(produced/1000,'kWh');el('v12Consumed').textContent=fmt(consumed/1000,'kWh');el('v12Final').textContent=fmt(battery/1000,'kWh');
+  el('v12Autonomy').textContent=load>0?fmt(cap/load,'h'):'Sans consommation';
+  el('v12Earth').textContent=fmt(earthHours,'h')+' / '+fmt(total,'h');el('v12Blackout').textContent=fmt(blackout,'h');
+  el('v12BatteryBar').style.width=(cap>0?100*battery/cap:0)+'%';
+  const notes=[];
+  if(unserved>0)notes.push('Déficit énergétique estimé : '+fmt(unserved/1000,'kWh')+' ; batterie vide pendant une partie de la simulation.');
+  if(lowest===0&&cap>0)notes.push('La batterie atteint 0 Wh dans le modèle.');
+  if(!notes.length)notes.push('Aucun déficit énergétique détecté par ce modèle simplifié sur la période.');
+  notes.push('Visibilité Terre : '+(total?((earthHours/total)*100).toFixed(1):'—')+' % de la durée simulée (approximation par intervalles).');
+  el('v12Warnings').textContent=notes.join(' ');
+  el('v12State').textContent='Bilan calculé pour '+rows.length+' échantillons · '+fmt(total,'h')+'.';
+ }
+ el('v12Calculate').addEventListener('click',calc);
+ ['v12Solar','v12Load','v12Battery','v12Initial','v12Efficiency','v12MinElev'].forEach(id=>el(id).addEventListener('change',calc));
+ const oldDisplay=displaySimulation;displaySimulation=function(data){oldDisplay(data);calc();};
+ const oldReset=resetSim;resetSim=function(){oldReset();['v12Produced','v12Consumed','v12Final','v12Autonomy','v12Earth','v12Blackout'].forEach(id=>el(id).textContent='—');el('v12BatteryBar').style.width='0%';el('v12State').textContent='Lance une simulation pour calculer le bilan.';el('v12Warnings').textContent='Résultats indicatifs, pas une étude de dimensionnement.';};
+})();
+</script><script>
+// V14: comparaison de données observées, sans inventer de résultats temporels.
+(function(){
+ const el=id=>document.getElementById(id);
+ const f=(v,d=1)=>Number.isFinite(Number(v))?Number(v).toFixed(d):'—';
+ const asNumber=v=>v===null||v===undefined||v===''?null:(Number.isFinite(Number(v))?Number(v):null);
+ const esc=v=>String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ function findRank(c){return scanData?.sites?.find(s=>Math.abs(s.lat-c.lat)<.0006&&Math.abs(s.lon-c.lon)<.0006)||null;}
+ function normal(c){const r=findRank(c);return {...c,score:asNumber(r?.score??c.score),slope:asNumber(r?.slope_deg??c.slope),histSun:asNumber(r?.sun_historical_percent??c.histSun),histEarth:asNumber(r?.earth_historical_percent??c.histEarth),psr:c.psr??null,alt:asNumber(r?.alt_m??c.alt),weights:r?scanData.scoring_weights:c.weights??null,source:r?'Classement V13':c.source??'Site sélectionné'};}
+ function addRank(r){if(comparisons.some(c=>Math.abs(c.lat-r.lat)<.0006&&Math.abs(c.lon-r.lon)<.0006))return false;comparisons.push({lat:r.lat,lon:r.lon,alt:r.alt_m,score:r.score,slope:r.slope_deg,histSun:r.sun_historical_percent,histEarth:r.earth_historical_percent,weights:scanData.scoring_weights,source:'Classement V13',sun:null,earth:null,both:null});return true;}
+ function barChart(title,key,color,unit,max){const rows=comparisons.map(normal).filter(c=>asNumber(c[key])!==null);if(!rows.length)return '';return `<div class="v14-chart"><h3>${title}</h3>${rows.map(c=>{const v=Number(c[key]);return `<div class="v14-bar-row"><span>${f(c.lat,3)}° / ${f(c.lon,3)}°</span><div class="v14-track"><div class="v14-fill" style="width:${Math.min(100,Math.max(0,v/max*100))}%;background:${color}"></div></div><b>${f(v)} ${unit}</b></div>`}).join('')}</div>`;}
+ function render(){const entries=comparisons.map(normal);if(!entries.length){el('compare').innerHTML='<div class="v14-empty">Aucun site enregistré. Depuis Explorer, sélectionne « Ajouter à la comparaison » ou utilise le bouton « Ajouter les 3 premiers du classement » après un balayage V13.</div>';el('v14Charts').innerHTML='';return;}
+ const headers=['Site','Score /100','Pente','Soleil historique','Terre historique','Altitude','Soleil simulé','Terre simulée','Soleil + Terre'];
+ const rows=entries.map((c,i)=>`<tr><td>${i+1}. ${f(c.lat,3)}° / ${f(c.lon,3)}°</td><td>${c.score===null?'—':f(c.score)}</td><td>${c.slope===null?'—':f(c.slope,2)+'°'}</td><td>${c.histSun===null?'—':f(c.histSun)+' %'}</td><td>${c.histEarth===null?'—':f(c.histEarth)+' %'}</td><td>${c.alt===null?'—':f(c.alt,0)+' m'}</td><td>${esc(c.sun??'—')}</td><td>${esc(c.earth??'—')}</td><td>${esc(c.both??'—')}</td></tr>`).join('');
+ el('compare').innerHTML=`<div class="v14-cards">${entries.map((c,i)=>`<div class="v14-card"><h3>Site ${i+1} · ${f(c.lat,3)}° / ${f(c.lon,3)}°</h3><p>Score multicritère : <strong>${c.score===null?'N/D':f(c.score)+'/100'}</strong></p><p>Soleil historique : ${c.histSun===null?'N/D':f(c.histSun)+' %'} · Terre : ${c.histEarth===null?'N/D':f(c.histEarth)+' %'}</p><p>Pente : ${c.slope===null?'N/D':f(c.slope,2)+'°'} · Altitude : ${c.alt===null?'N/D':f(c.alt,0)+' m'}</p><p>Source : ${esc(c.source)}</p><button class="secondary" type="button" data-v14-remove="${i}">Retirer</button></div>`).join('')}</div><div style="overflow-x:auto"><table><thead><tr>${headers.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>${rows}</tbody></table></div>`;
+ el('v14Charts').innerHTML=barChart('Éclairement solaire moyen historique','histSun','#e6ad4d','%',100)+barChart('Visibilité historique de la Terre','histEarth','#52b9e5','%',100)+barChart('Pente locale (plus faible = préférable)','slope','#5dc99e','°',Math.max(10,...entries.map(c=>c.slope||0)))+barChart('Score multicritère V13 (pondérations du balayage)','score','#ab8cf0','/100',100)+`<p class="v14-note">Les pourcentages historiques sont des moyennes sur 18,6 ans, pas des prévisions pour la mission. Les valeurs de simulation datée sont affichées uniquement lorsqu'elles ont été calculées pour le site. Les scores V13 sont comparables seulement si les pondérations et contraintes du balayage sont identiques. Les risques énergétiques V12 ne sont pas calculés automatiquement pour les candidats.</p>`;
+ el('compare').querySelectorAll('[data-v14-remove]').forEach(b=>b.addEventListener('click',()=>{comparisons.splice(Number(b.dataset.v14Remove),1);render();}));
+ }
+ // Existing handlers invoke the global comparison() dynamically; replace renderer.
+ comparison=render;
+ el('v14AddTop').addEventListener('click',()=>{if(!scanData?.sites?.length){el('v14Status').textContent='Lance d’abord « Analyser la zone sélectionnée » dans Explorer.';return;}let n=0;scanData.sites.slice(0,3).forEach(r=>{if(addRank(r))n++});render();el('v14Status').textContent=n+' nouveau(x) candidat(s) ajouté(s).';});
+ // Add explicit selection action to the ranking after each scan, without changing its calculation.
+ const originalRenderScan=renderScan;
+ renderScan=function(){originalRenderScan();const table=el('scanResults').querySelector('table');if(!table)return;table.querySelectorAll('tbody tr').forEach((tr,i)=>{const td=document.createElement('td'),b=document.createElement('button');b.type='button';b.className='secondary';b.textContent='+ Comparer';b.style.cssText='padding:6px 9px;font-size:12px';b.addEventListener('click',()=>{if(addRank(scanData.sites[i])){render();el('scanStatus').textContent='Candidat ajouté à Comparer.';}else el('scanStatus').textContent='Candidat déjà présent dans Comparer.';});td.appendChild(b);tr.appendChild(td)});const th=document.createElement('th');th.textContent='Comparer';table.querySelector('thead tr').appendChild(th);};
+ // Enrich manually added site with NASA historic layers and matching ranking values.
+ const oldAdd=el('add').onclick;
+ el('add').onclick=function(){if(!selected){oldAdd();return;}if(comparisons.some(c=>Math.abs(c.lat-selected.lat)<.0006&&Math.abs(c.lon-selected.lon)<.0006)){msg('Ce site figure déjà dans la comparaison.');return;}oldAdd();const c=comparisons.at(-1);c.histSun=selected.layers?.sun===null?null:asNumber(selected.layers?.sun)*100;c.histEarth=selected.layers?.earth===null?null:asNumber(selected.layers?.earth)*100;c.psr=selected.layers?.psr;c.source='Site sélectionné';render();};
+ el('v14Export').addEventListener('click',()=>{if(!comparisons.length){el('v14Status').textContent='Aucun site à exporter.';return;}const cols=['latitude_deg','longitude_deg','score_v13_100','pente_deg','soleil_historique_pct','terre_historique_pct','altitude_m','soleil_simule_pct','terre_simule_pct','simultane_pct','source'];const val=(c,k)=>({latitude_deg:c.lat,longitude_deg:c.lon,score_v13_100:c.score,pente_deg:c.slope,soleil_historique_pct:c.histSun,terre_historique_pct:c.histEarth,altitude_m:c.alt,soleil_simule_pct:c.sun,terre_simule_pct:c.earth,simultane_pct:c.both,source:c.source})[k];const csv='\ufeff'+cols.join(';')+'\r\n'+comparisons.map(normal).map(c=>cols.map(k=>{const v=val(c,k);return v===null||v===undefined?'':`"${String(v).replace(/"/g,'""')}"`}).join(';')).join('\r\n');const a=document.createElement('a');const url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.href=url;a.download='lunar_comparaison_v14.csv';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);el('v14Status').textContent='CSV exporté : '+comparisons.length+' site(s).';});
+ render();
+})();
+</script><script>
+(function(){
+'use strict';
+// Coordinates are approximate educational locators (latitude, east-positive longitude).
+const missions=[
+ ['Apollo 11','Apollo',1969,0.674,23.473,'Mer de la Tranquillité'],
+ ['Apollo 12','Apollo',1969,-3.013,-23.421,'Océan des Tempêtes'],
+ ['Apollo 14','Apollo',1971,-3.645,-17.472,'Fra Mauro'],
+ ['Apollo 15','Apollo',1971,26.132,3.634,'Hadley–Apennins'],
+ ['Apollo 16','Apollo',1972,-8.973,15.499,'Hauts plateaux de Descartes'],
+ ['Apollo 17','Apollo',1972,20.191,30.772,'Taurus–Littrow'],
+ ["Chang’e 3",'Chine',2013,44.121,-19.511,'Mare Imbrium'],
+ ["Chang’e 4",'Chine',2019,-45.457,177.589,'Cratère Von Kármán, face éloignée'],
+ ["Chang’e 5",'Chine',2020,43.057,-51.916,'Oceanus Procellarum'],
+ ["Chang’e 6",'Chine',2024,-41.638,-153.986,'Bassin Pôle Sud–Aitken, face éloignée'],
+ ['Chandrayaan-3','Inde',2023,-69.373,32.319,'Hautes latitudes australes (hors 85°S–90°S)'],
+ ['Luna 9','URSS',1966,7.08,-64.37,'Oceanus Procellarum'],
+ ['Luna 16','URSS',1970,-0.68,56.30,'Mare Fecunditatis'],
+ ['Luna 24','URSS',1976,12.75,62.20,'Mare Crisium'],
+ ['IM-1 Odysseus','CLPS',2024,-80.13,1.44,'Région de Malapert A (hors 85°S–90°S)'],
+ ['Blue Ghost Mission 1','CLPS',2025,18.56,61.81,'Mare Crisium']
+].map((v,i)=>({id:i,name:v[0],group:v[1],year:v[2],lat:v[3],lon:v[4],region:v[5]}));
+const el=id=>document.getElementById(id), rad=Math.PI/180;
+function point(lat,lon,center){const phi=lat*rad,d=(lon-center)*rad;return {x:210+175*Math.cos(phi)*Math.sin(d),y:210-175*Math.sin(phi),visible:Math.cos(phi)*Math.cos(d)>=0};}
+function grid(center){let out='<circle cx="210" cy="210" r="176" fill="#142d46" stroke="#7ba5c6" stroke-width="1.5"/>';for(const lat of [-60,-30,0,30,60]){let path='';for(let lon=center-90;lon<=center+90;lon+=2){let p=point(lat,lon,center);path+=(path?' L':'M')+p.x.toFixed(2)+' '+p.y.toFixed(2)}out+='<path d="'+path+'" fill="none" stroke="#45657f" stroke-width=".8"/>'}for(let lon=center-90;lon<=center+90;lon+=30){let path='';for(let lat=-90;lat<=90;lat+=3){let p=point(lat,lon,center);path+=(path?' L':'M')+p.x.toFixed(2)+' '+p.y.toFixed(2)}out+='<path d="'+path+'" fill="none" stroke="#45657f" stroke-width=".8"/>'}return out;}
+function shown(){const group=el('v15Filter').value,q=el('v15Search').value.trim().toLowerCase();return missions.filter(m=>(group==='all'||m.group===group)&&(!q||(m.name+' '+m.region+' '+m.group).toLowerCase().includes(q)));}
+function fmt(v){return Math.abs(v).toFixed(3)+'°'+(v<0?' −':' +');}
+function detail(m){el('v15Detail').innerHTML='<h3>'+m.name+' · '+m.year+'</h3><div><b>Programme :</b> '+m.group+'</div><div><b>Région :</b> '+m.region+'</div><div><b>Coordonnées approximatives :</b> '+Math.abs(m.lat).toFixed(3)+'°'+(m.lat<0?'S':'N')+' / '+Math.abs(m.lon).toFixed(3)+'°'+(m.lon<0?'O':'E')+'</div><div><b>Analyse LOLA actuelle :</b> '+(m.lat<=-85?'Dans la bande 85°S–90°S ; vérifier la couverture des couches avant analyse.':'Non disponible : ce site est hors de la bande 85°S–90°S couverte par le moteur actuel.')+'</div>'+(m.lat<=-85?'<button type="button" id="v15ExploreSite">Ouvrir dans Explorer</button>':'<p class="v15-note">La carte globale permet de localiser ce site, mais le serveur ne calcule pas ici son relief ni ses conditions Soleil–Terre.</p>');const b=el('v15ExploreSite');if(b)b.onclick=()=>{el('lat').value=m.lat;el('lon').value=m.lon;showTab('explore');};}
+function render(){const items=shown();for(const [id,center] of [['v15Near',0],['v15Far',180]]){const svg=el(id);svg.innerHTML=grid(center);for(const m of items){const p=point(m.lat,m.lon,center);if(!p.visible)continue;const node=document.createElementNS('http://www.w3.org/2000/svg','circle');node.setAttribute('cx',p.x);node.setAttribute('cy',p.y);node.setAttribute('r',6);node.setAttribute('fill',m.group==='Apollo'?'#f0c46b':m.group==='CLPS'?'#58c9b6':'#a6a4ff');node.setAttribute('stroke','#091827');node.setAttribute('stroke-width','1.5');node.setAttribute('class','v15-point');node.setAttribute('tabindex','0');node.setAttribute('role','button');node.setAttribute('aria-label',m.name);const title=document.createElementNS('http://www.w3.org/2000/svg','title');title.textContent=m.name;node.appendChild(title);node.addEventListener('click',()=>detail(m));node.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();detail(m)}});svg.appendChild(node);}}
+ el('v15Rows').innerHTML=items.map(m=>'<tr data-v15-id="'+m.id+'"><td>'+m.name+'</td><td>'+m.group+'</td><td>'+m.year+'</td><td>'+Math.abs(m.lat).toFixed(3)+'°'+(m.lat<0?'S':'N')+'</td><td>'+Math.abs(m.lon).toFixed(3)+'°'+(m.lon<0?'O':'E')+'</td><td>'+(m.lat<=-85?'Oui':'Non')+'</td></tr>').join('')||'<tr><td colspan="6">Aucune mission correspondante.</td></tr>';
+ el('v15Rows').querySelectorAll('[data-v15-id]').forEach(tr=>tr.addEventListener('click',()=>detail(missions[Number(tr.dataset.v15Id)])));
+}
+el('v15Filter').addEventListener('change',render);el('v15Search').addEventListener('input',render);render();
+})();
+</script><script>
+(()=>{
+const get=id=>document.getElementById(id),canvas=get('v16Canvas'),ctx=canvas.getContext('2d');
+let terrain=null,az=-0.65,tilt=0.9,zoom=0.85,drag=null;
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+function draw(){
+ const w=canvas.width,h=canvas.height;ctx.clearRect(0,0,w,h);
+ const bg=ctx.createLinearGradient(0,0,0,h);bg.addColorStop(0,'#0a1b2e');bg.addColorStop(1,'#030b14');ctx.fillStyle=bg;ctx.fillRect(0,0,w,h);
+ if(!terrain){ctx.fillStyle='#b6cce0';ctx.font='20px system-ui';ctx.fillText('Charge une zone LOLA pour afficher son relief',50,h/2);return;}
+ const z=terrain.heights,n=terrain.n,exag=+get('v16Exag').value;
+ const min=terrain.min_m,max=terrain.max_m,avg=(min+max)/2,extent=terrain.size_km;
+ // La fenêtre entière reste visible même lorsque le terrain est tourné.
+ const reliefKm=(max-min)/1000*exag;
+ const scale=Math.min(w/(extent*1.95),h/(extent*1.65+reliefKm*1.3))*zoom;
+ const cA=Math.cos(az),sA=Math.sin(az),cT=Math.cos(tilt),sT=Math.sin(tilt);
+ function project(i,j){const height=z[j][i];if(height===null||!Number.isFinite(height))return null;
+ const x=(i/(n-1)-.5)*extent,y=(.5-j/(n-1))*extent,v=(height-avg)/1000*exag;
+ const xr=x*cA-y*sA,yr=x*sA+y*cA;
+ return {x:w/2+xr*scale,y:h*.55+(yr*cT-v*sT)*scale,depth:yr*sT+v*cT,height};}
+ const points=Array.from({length:n},(_,j)=>Array.from({length:n},(_,i)=>project(i,j)));
+ const polys=[];
+ for(let j=0;j<n-1;j++)for(let i=0;i<n-1;i++){
+ const a=points[j][i],b=points[j][i+1],c=points[j+1][i+1],d=points[j+1][i];if(!a||!b||!c||!d)continue;
+ // Normale locale dérivée des pentes LOLA (éclairage fixe dans le repère terrain).
+ const dx=((b.height+c.height)-(a.height+d.height))/2/terrain.step_m;
+ const dy=((d.height+c.height)-(a.height+b.height))/2/terrain.step_m;
+ const nx=-dx*exag,ny=-dy*exag,nz=1;
+ const norm=Math.hypot(nx,ny,nz);const dot=Math.max(0,(nx*(-.55)+ny*(-.35)+nz*.76)/norm);
+ const elevation=(a.height+b.height+c.height+d.height)/4;
+ const f=clamp((elevation-min)/Math.max(max-min,1),0,1);
+ const lum=clamp(.18+.72*dot+.12*f,.12,1);
+ polys.push({p:[a,b,c,d],depth:(a.depth+b.depth+c.depth+d.depth)/4,lum});}
+ polys.sort((a,b)=>b.depth-a.depth);
+ for(const poly of polys){const p=poly.p,l=poly.lum;
+ ctx.beginPath();ctx.moveTo(p[0].x,p[0].y);for(let k=1;k<4;k++)ctx.lineTo(p[k].x,p[k].y);ctx.closePath();
+ ctx.fillStyle=`rgb(${Math.round(58+145*l)},${Math.round(60+139*l)},${Math.round(67+130*l)})`;ctx.fill();
+ // Un trait de même couleur comble les micro-fissures dues à l'anticrénelage.
+ ctx.strokeStyle=ctx.fillStyle;ctx.lineWidth=1.1;ctx.stroke();}
+ // Quadrillage discret, seulement toutes les 8 cellules.
+ ctx.strokeStyle='rgba(179,211,228,.19)';ctx.lineWidth=.7;
+ for(let j=0;j<n;j+=8){ctx.beginPath();let active=false;for(let i=0;i<n;i++){let p=points[j][i];if(!p){active=false;continue;}if(!active)ctx.moveTo(p.x,p.y);else ctx.lineTo(p.x,p.y);active=true;}ctx.stroke();}
+ for(let i=0;i<n;i+=8){ctx.beginPath();let active=false;for(let j=0;j<n;j++){let p=points[j][i];if(!p){active=false;continue;}if(!active)ctx.moveTo(p.x,p.y);else ctx.lineTo(p.x,p.y);active=true;}ctx.stroke();}
+ ctx.fillStyle='#e5f1fa';ctx.font='16px system-ui';ctx.fillText('LOLA · '+extent+' km · '+exag+'× vertical',22,32);
+ ctx.font='13px system-ui';ctx.fillStyle='#afc5d7';ctx.fillText('Altitude : '+min.toFixed(0)+' à '+max.toFixed(0)+' m · grille '+n+'×'+n,22,55);
+}
+async function load(){const lat=+get('v16Lat').value,lon=+get('v16Lon').value,size=+get('v16Size').value;
+ if(!Number.isFinite(lat)||lat < -90||lat > -85||!Number.isFinite(lon)||lon < -180||lon > 180){get('v16Status').textContent='Coordonnées invalides : latitude entre -90 et -85°, longitude entre -180 et 180°.';return;}
+ get('v16Load').disabled=true;get('v16Status').textContent='Chargement des altitudes LOLA…';
+ try{const r=await fetch(`/api/terrain-3d?lat=${encodeURIComponent(lat)}&lon=${encodeURIComponent(lon)}&size_km=${size}&n=65`);const data=await r.json();if(!r.ok)throw Error(data.detail||'Erreur serveur');terrain=data;
+ get('v16Min').textContent=data.min_m.toLocaleString('fr-FR')+' m';get('v16Max').textContent=data.max_m.toLocaleString('fr-FR')+' m';get('v16Coverage').textContent=(100*data.valid_fraction).toFixed(1)+' %';
+ get('v16Status').textContent=`Zone chargée · grille ${data.n}×${data.n} · pas ${(data.step_m).toFixed(0)} m · ${data.lat.toFixed(3)}° / ${data.lon.toFixed(3)}°`;draw();}
+ catch(e){get('v16Status').textContent='Erreur : '+e.message;}finally{get('v16Load').disabled=false;}}
+ get('v16Load').addEventListener('click',load);
+ get('v16FromExplore').addEventListener('click',()=>{get('v16Lat').value=get('lat').value;get('v16Lon').value=get('lon').value;load();});
+ get('v16Reset').addEventListener('click',()=>{az=-.65;tilt=.9;zoom=.85;draw();});
+ get('v16Exag').addEventListener('input',()=>{get('v16ExagVal').textContent=get('v16Exag').value+'×';draw();});
+ canvas.addEventListener('pointerdown',e=>{drag={x:e.clientX,y:e.clientY};canvas.setPointerCapture(e.pointerId)});
+ canvas.addEventListener('pointermove',e=>{if(!drag)return;az+=(e.clientX-drag.x)*.009;tilt=clamp(tilt+(e.clientY-drag.y)*.006,.15,1.5);drag={x:e.clientX,y:e.clientY};draw()});
+ canvas.addEventListener('pointerup',()=>drag=null);canvas.addEventListener('pointercancel',()=>drag=null);
+ canvas.addEventListener('wheel',e=>{e.preventDefault();zoom=clamp(zoom*Math.exp(-e.deltaY*.001),.3,4);draw()},{passive:false});
+ draw();
+})();
+</script><script>
+// V17: presentation only. No site state, API, simulation or ranking value is modified.
+(function(){
+ const beginner=document.getElementById('v17Beginner'), expert=document.getElementById('v17Expert');
+ if(!beginner||!expert)return;
+ const advanced=[...document.querySelectorAll('#page-explore details.compact-fold')].filter(d=>/Classement intelligent|Énergie et communications/.test(d.querySelector('summary')?.textContent||''));
+ advanced.forEach(d=>d.dataset.v17Advanced='true');
+ let mode='expert';try{mode=localStorage.getItem('lunar-v17-mode')==='beginner'?'beginner':'expert'}catch(e){}
+ function apply(m){
+   document.body.dataset.mode=m;
+   beginner.setAttribute('aria-pressed',String(m==='beginner'));
+   expert.setAttribute('aria-pressed',String(m==='expert'));
+   advanced.forEach(d=>{if(m==='beginner'&&!d.classList.contains('v17-revealed'))d.open=false;});
+   try{localStorage.setItem('lunar-v17-mode',m)}catch(e){}
+ }
+ beginner.addEventListener('click',()=>apply('beginner'));
+ expert.addEventListener('click',()=>apply('expert'));
+ document.getElementById('v17ShowAdvanced')?.addEventListener('click',function(){advanced.forEach(d=>{d.classList.add('v17-revealed');d.open=true});this.textContent='Outils avancés affichés';});
+ apply(mode);
+})();
+</script>
+</body></html>
