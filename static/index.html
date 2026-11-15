@@ -1,18 +1,123 @@
-<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Lunar Landing Site Navigator</title><style>
-:root{font-family:Inter,system-ui,Arial,sans-serif;color:#eaf0fa;background:#080f1d}*{box-sizing:border-box}body{margin:0}header{padding:20px 28px;border-bottom:1px solid #27344a;display:flex;justify-content:space-between;align-items:center}h1{font-size:22px;margin:4px 0}h2{font-size:17px;margin:0 0 14px}.sub,small{color:#9eacc2}main{display:grid;grid-template-columns:310px minmax(320px,1fr) 340px;gap:16px;padding:18px;max-width:1750px;margin:auto}.panel{background:#111c2e;border:1px solid #293850;border-radius:14px;padding:17px;min-width:0}label{display:block;color:#aebdd2;font-size:12px;margin:13px 0 5px}input,select,button{font:inherit}input,select{background:#0b1423;border:1px solid #354661;border-radius:7px;padding:10px;color:#fff;width:100%}button{background:#407cff;border:0;color:white;padding:11px 14px;border-radius:8px;cursor:pointer;font-weight:650}button.secondary{background:#243854}button:disabled{opacity:.5;cursor:wait}.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}.mapframe{position:relative;aspect-ratio:1;max-height:680px;background:#03070c;border:1px solid #2e3d55;border-radius:12px;overflow:hidden;cursor:crosshair}.mapframe img{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:fill;image-rendering:auto}.mapframe img.small{width:33.17%;height:33.17%;left:33.415%;top:33.415%}.mapframe #overlay{opacity:.58;mix-blend-mode:screen}.mapframe #marker{position:absolute;width:15px;height:15px;border:2px solid #fff;background:#ffba46;border-radius:50%;transform:translate(-50%,-50%);box-shadow:0 0 0 5px #ffba4640;pointer-events:none}.mapcaption{display:flex;justify-content:space-between;gap:8px;margin-top:9px;color:#9eacc2;font-size:12px}.stat{padding:12px;background:#0a1424;border-radius:9px;margin:9px 0}.stat b{font-size:21px;display:block;margin-top:5px}.stat span{font-size:12px;color:#aebdd2}.status{padding:11px;background:#17273c;border-radius:9px;font-size:12px;line-height:1.5;margin-top:14px;white-space:pre-wrap}.tag{background:#213958;border-radius:30px;padding:5px 9px;font-size:11px;color:#b8d4ff}.sitebtn{width:100%;background:#1e314b;text-align:left;margin-top:7px}.sitebtn:hover{background:#2b4569}#chart{width:100%;height:230px;background:#0b1423;border-radius:10px}#timeline{overflow-x:auto;font-size:12px}table{border-collapse:collapse;width:100%;font-size:12px}th,td{padding:9px;border-bottom:1px solid #2a3951;text-align:left}th{color:#9eacc2}footer{padding:18px 26px;color:#8c9ab0;font-size:12px}.notice{color:#f6cf8b;font-size:12px;line-height:1.5} .bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap} @media(max-width:1150px){main{grid-template-columns:280px 1fr}.right{grid-column:1/-1}}@media(max-width:700px){main{grid-template-columns:1fr}.right{grid-column:auto}header{padding:16px}main{padding:10px}.mapframe{max-height:none}}</style></head><body>
-<header><div><div class="sub" style="font-size:11px;letter-spacing:2px">LUNAR MISSION ANALYSIS</div><h1>Lunar Landing Site Navigator <span class="tag">V1 · P0</span></h1><div class="sub" style="font-size:12px">Pôle Sud · LOLA / NASA · Éphémérides JPL Horizons</div></div><div class="sub" id="health">Chargement…</div></header>
-<main><section class="panel"><h2>01 · Configuration</h2><div class="sub" style="font-size:13px">Clique sur la carte ou saisis des coordonnées.</div><div class="two"><div><label>Latitude (°)</label><input id="lat" type="number" min="-90" max="-75" step="0.001" value="-85"></div><div><label>Longitude est (°)</label><input id="lon" type="number" min="-180" max="180" step="0.001" value="0"></div></div><button class="secondary" id="locate" style="width:100%;margin-top:10px">Localiser le site</button><label>Sites de démonstration (coordonnées exploratoires)</label><button class="sitebtn" data-lat="-85" data-lon="0">Point A · 85°S / 0°E</button><button class="sitebtn" data-lat="-86" data-lon="30">Point B · 86°S / 30°E</button><button class="sitebtn" data-lat="-87" data-lon="-40">Point C · 87°S / 40°W</button><div class="notice" style="margin-top:9px">Ces points ne sont pas des sites d'alunissage approuvés. Ils servent à tester le moteur scientifique.</div><label>Date et heure UTC</label><input id="date" type="datetime-local" value="2026-11-15T12:00"><div class="two"><div><label>Durée (heures)</label><select id="hours"><option value="24">24 h</option><option value="72" selected>72 h</option><option value="168">7 jours</option><option value="336">14 jours</option></select></div><div><label>Pas (heures)</label><select id="step"><option value="1">1 h</option><option value="3" selected>3 h</option><option value="6">6 h</option><option value="12">12 h</option></select></div></div><button id="run" style="width:100%;margin-top:18px">Lancer la simulation</button><button class="secondary" id="add" style="width:100%;margin-top:8px">Ajouter à la comparaison</button><div class="status" id="message">Sélectionne un site pour afficher ses données NASA. La simulation temporelle nécessite une connexion au service JPL Horizons.</div></section>
-<section class="panel"><div class="bar" style="justify-content:space-between;margin-bottom:12px"><h2 style="margin:0">02 · Carte lunaire</h2><select id="layer" style="width:190px"><option value="terrain">Relief LOLA</option><option value="earth">Visibilité Terre moyenne</option><option value="sun">Éclairement solaire moyen</option><option value="psr">Ombres permanentes</option></select></div><div class="mapframe" id="map"><img src="/static/terrain.png" alt="Relief lunaire LOLA" id="base"><img src="/static/earth.png" alt="Couche NASA" id="overlay" style="display:none"><div id="marker"></div></div><div class="mapcaption"><span>Projection stéréographique polaire sud · centre : 90°S</span><span>75°S–90°S</span></div><div class="notice" style="margin-top:10px">Les couches d'éclairement et d'ombres permanentes ne couvrent que la zone 85°S–90°S. Les moyennes NASA ne représentent pas une date précise.</div><h2 style="margin-top:22px">03 · Évolution temporelle</h2><canvas id="chart" width="900" height="230"></canvas><div class="sub" style="font-size:12px;margin-top:6px">Courbes : élévation solaire (ambre) et terrestre (bleu). Les points tiennent compte de l'horizon topographique pour les états visibles/masqués.</div><div id="timeline" style="margin-top:12px"></div></section>
-<section class="panel right"><h2>04 · Analyse du site</h2><div class="stat"><span>Altitude LOLA relative au rayon de référence</span><b id="alt">—</b></div><div class="two"><div class="stat"><span>Terre · moyenne historique</span><b id="earthval">—</b></div><div class="stat"><span>Soleil · moyenne historique</span><b id="sunval">—</b></div></div><div class="stat"><span>Zone d'ombre permanente</span><b id="psrval">—</b></div><h2 style="margin-top:23px">Fenêtres de visibilité · période choisie</h2><div class="two"><div class="stat"><span>Soleil visible</span><b id="sunpct">—</b></div><div class="stat"><span>Terre visible</span><b id="earthpct">—</b></div></div><div class="stat"><span>Soleil + Terre simultanément visibles</span><b id="bothpct">—</b></div><div class="stat"><span>Prochain coucher du Soleil (échantillonné)</span><b id="sunset">—</b></div><h2 style="margin-top:22px">05 · Comparaison</h2><div class="sub" style="font-size:12px">Ajoute plusieurs sites puis lance une simulation pour chacun.</div><div id="compare" style="overflow-x:auto;margin-top:10px"><div class="sub">Aucun site enregistré.</div></div><button class="secondary" id="clear" style="margin-top:12px">Effacer la comparaison</button><div class="notice" style="margin-top:20px">Méthode : DEM LOLA 120 m, horizon échantillonné jusqu'à 35 km ; visibilité géométrique du centre du Soleil/de la Terre. Les valeurs ne garantissent ni une puissance électrique donnée ni une liaison radio.</div></section></main><footer>NASA LOLA · PGDA Goddard · JPL Horizons · Prototype scientifique P0. Les résultats doivent être validés avant toute utilisation opérationnelle.</footer>
+<!DOCTYPE html>
+
+<html lang="fr"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1" name="viewport"/><title>Lunar Landing Site Navigator</title><style>
+:root{font-family:Inter,system-ui,Arial,sans-serif;color:#eaf0fa;background:#080f1d}*{box-sizing:border-box}body{margin:0}header{padding:20px 28px;border-bottom:1px solid #27344a;display:flex;justify-content:space-between;align-items:center}h1{font-size:22px;margin:4px 0}h2{font-size:17px;margin:0 0 14px}.sub,small{color:#9eacc2}main{display:grid;grid-template-columns:310px minmax(320px,1fr) 340px;gap:16px;padding:18px;max-width:1750px;margin:auto}.panel{background:#111c2e;border:1px solid #293850;border-radius:14px;padding:17px;min-width:0}label{display:block;color:#aebdd2;font-size:12px;margin:13px 0 5px}input,select,button{font:inherit}input,select{background:#0b1423;border:1px solid #354661;border-radius:7px;padding:10px;color:#fff;width:100%}button{background:#407cff;border:0;color:white;padding:11px 14px;border-radius:8px;cursor:pointer;font-weight:650}button.secondary{background:#243854}button:disabled{opacity:.5;cursor:wait}.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}.mapframe{position:relative;aspect-ratio:1;max-height:680px;background:#03070c;border:1px solid #2e3d55;border-radius:12px;overflow:hidden;cursor:crosshair}.mapframe img{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:fill;image-rendering:auto}.mapframe img.small{width:33.17%;height:33.17%;left:33.415%;top:33.415%}.mapframe #overlay{opacity:.58;mix-blend-mode:screen}.mapframe #marker{position:absolute;width:15px;height:15px;border:2px solid #fff;background:#ffba46;border-radius:50%;transform:translate(-50%,-50%);box-shadow:0 0 0 5px #ffba4640;pointer-events:none}.mapcaption{display:flex;justify-content:space-between;gap:8px;margin-top:9px;color:#9eacc2;font-size:12px}.stat{padding:12px;background:#0a1424;border-radius:9px;margin:9px 0}.stat b{font-size:21px;display:block;margin-top:5px}.stat span{font-size:12px;color:#aebdd2}.status{padding:11px;background:#17273c;border-radius:9px;font-size:12px;line-height:1.5;margin-top:14px;white-space:pre-wrap}.tag{background:#213958;border-radius:30px;padding:5px 9px;font-size:11px;color:#b8d4ff}.sitebtn{width:100%;background:#1e314b;text-align:left;margin-top:7px}.sitebtn:hover{background:#2b4569}#chart{width:100%;height:230px;background:#0b1423;border-radius:10px}#timeline{overflow-x:auto;font-size:12px}table{border-collapse:collapse;width:100%;font-size:12px}th,td{padding:9px;border-bottom:1px solid #2a3951;text-align:left}th{color:#9eacc2}footer{padding:18px 26px;color:#8c9ab0;font-size:12px}.notice{color:#f6cf8b;font-size:12px;line-height:1.5} .bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap} @media(max-width:1150px){main{grid-template-columns:280px 1fr}.right{grid-column:1/-1}}@media(max-width:700px){main{grid-template-columns:1fr}.right{grid-column:auto}header{padding:16px}main{padding:10px}.mapframe{max-height:none}}
+nav.tabs{display:flex;gap:8px;padding:12px 22px;background:#0b1525;border-bottom:1px solid #27344a;flex-wrap:wrap}
+nav.tabs button{background:#1c2d47;color:#c5d5eb;min-width:120px}
+nav.tabs button.active{background:#407cff;color:white}
+.tabpage{display:none;max-width:1600px;margin:auto;padding:18px}
+.tabpage.active{display:block}
+.tabgrid{display:grid;grid-template-columns:minmax(360px,1.5fr) minmax(300px,1fr);gap:16px}
+.tabgrid .panel{height:fit-content}
+.dashboard{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.dashboard .panel{height:100%}
+.configgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.fieldrow{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:16px}
+.fieldrow input[type=range]{flex:1;width:auto;accent-color:#407cff}
+.fieldrow output{min-width:56px;text-align:right}
+.note{font-size:12px;color:#9eacc2;line-height:1.6}
+.hero{padding:20px 22px 0;max-width:1600px;margin:auto}
+.hero h2{font-size:23px;margin:0 0 8px}
+@media(max-width:850px){.tabgrid,.dashboard,.configgrid{grid-template-columns:1fr}nav.tabs button{min-width:0;flex:1} .tabpage{padding:10px}}
+
+/* V5 : exploration en haut, configuration en bas ; analyse sur accueil */
+#page-explore .tabgrid{display:block}
+#page-explore .tabgrid>.panel{width:100%}
+#page-explore .mapframe{width:min(100%,760px);margin:0 auto}
+#page-explore .explorer-config{margin-top:30px;border-top:1px solid #293850;padding-top:12px}
+#page-home .analysis-home{margin-top:16px}
+#page-home .analysis-home .two{max-width:850px}
+#page-explore .configgrid{margin-top:14px}
+</style><style>
+/* V6 — direction artistique lunaire, animations discrètes et accessibles */
+:root{color-scheme:dark;--accent:#59bdf5;--cyan:#6ce5dc;--gold:#f7be69;--ink:#07101f}
+html{scroll-behavior:smooth}
+body{background:#07101e;color:#eaf4ff;min-height:100vh;position:relative}
+body::before{content:"";position:fixed;inset:0;z-index:-2;background:linear-gradient(90deg,rgba(5,12,25,.90) 0%,rgba(6,16,32,.83) 52%,rgba(5,11,22,.57) 100%),url('/static/lunar-background.png') center top / cover no-repeat;pointer-events:none}
+body::after{content:"";position:fixed;inset:0;z-index:-1;background:radial-gradient(circle at 78% 12%,rgba(90,186,246,.14),transparent 40%),linear-gradient(180deg,transparent 10%,rgba(5,11,22,.52));pointer-events:none}
+header{background:rgba(8,19,36,.72);backdrop-filter:blur(16px);border-color:rgba(126,177,223,.22)}
+header h1{letter-spacing:-.5px}header .tag{background:rgba(72,185,233,.16);color:#91e6ff;border:1px solid rgba(107,218,255,.24)}
+nav.tabs{position:sticky;top:0;z-index:40;background:rgba(8,20,38,.85);backdrop-filter:blur(20px);border-bottom:1px solid rgba(115,189,236,.22);padding-top:14px;padding-bottom:14px}
+nav.tabs button{background:transparent;color:#b7cee5;border:1px solid transparent;transition:background .25s ease,color .25s ease,transform .25s ease,border-color .25s ease,box-shadow .25s ease}
+nav.tabs button:hover{background:rgba(78,162,230,.14);color:#fff;border-color:rgba(104,189,247,.26);transform:translateY(-2px)}
+nav.tabs button.active{background:linear-gradient(125deg,#2473c7,#288eae);color:white;border-color:rgba(143,225,255,.46);box-shadow:0 6px 22px rgba(19,122,193,.25)}
+.panel{background:rgba(12,27,48,.83);border:1px solid rgba(117,175,222,.22);box-shadow:0 14px 44px rgba(0,0,0,.19);backdrop-filter:blur(10px);transition:border-color .25s ease,box-shadow .25s ease}
+.panel:hover{border-color:rgba(109,193,244,.37);box-shadow:0 18px 50px rgba(0,0,0,.24)}
+.stat{background:rgba(5,17,33,.72);border:1px solid rgba(95,161,210,.11);transition:transform .22s ease,border-color .22s ease}
+.stat:hover{transform:translateY(-2px);border-color:rgba(101,199,235,.34)}
+.stat b{color:#f4f9ff;font-variant-numeric:tabular-nums}
+button{background:linear-gradient(120deg,#317de7,#2595c6);box-shadow:0 3px 14px rgba(30,122,204,.13);transition:transform .2s ease,box-shadow .2s ease,filter .2s ease}
+button:not(:disabled):hover{transform:translateY(-2px);filter:brightness(1.12);box-shadow:0 9px 23px rgba(30,122,204,.23)}
+button:not(:disabled):active{transform:translateY(0)}
+button.secondary,.sitebtn{background:rgba(43,77,113,.78)}
+input,select{background:rgba(5,17,33,.88);border-color:rgba(105,163,206,.36);transition:border-color .2s ease,box-shadow .2s ease}
+input:focus,select:focus{outline:none;border-color:#68cde9;box-shadow:0 0 0 3px rgba(64,171,216,.16)}
+input[type=range]{accent-color:#54c5e9}
+.hero h2{font-size:clamp(22px,2.4vw,30px);color:#f5faff;letter-spacing:-.4px}
+h2{color:#e6f5ff} .sub,small,.note{color:#b1c4db} .notice{color:#f7c77b}
+.tabpage.active{animation:pageEnter .38s ease-out both}
+@keyframes pageEnter{from{opacity:.55;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+#page-explore .explorer-config{margin-top:0;border-top:0;padding-top:0;margin-bottom:24px}
+#page-explore .tabgrid{margin-top:14px}
+#page-explore .tabgrid>.panel{border-color:rgba(83,194,224,.28)}
+#page-explore .mapframe{box-shadow:0 0 0 1px rgba(118,198,239,.24),0 14px 42px rgba(0,0,0,.32)}
+#page-explore .explorer-config>.hero{padding-top:4px}
+#page-explore .tabgrid::before{content:'RÉSULTATS DE L’EXPLORATION';display:block;color:#84dce9;letter-spacing:2px;font-size:12px;font-weight:750;margin:18px 0 12px}
+#sunCountdown{color:#f7c36d}#earthCountdown{color:#7bc8ff}
+#candidatePins>*,#marker{transition:left .35s ease,top .35s ease,transform .25s ease}
+@media(max-width:700px){body::before{background-position:62% top}nav.tabs{top:0}header{backdrop-filter:blur(10px)}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+
+
+/* V7 — fond lunaire réellement visible derrière les panneaux */
+html{background:#050b16}
+body{background:transparent!important;isolation:isolate}
+body::before{
+  content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background-image:linear-gradient(90deg,rgba(4,11,24,.48) 0%,rgba(5,13,27,.42) 48%,rgba(5,12,25,.27) 100%),url('/static/lunar-background-v7.jpg');
+  background-size:cover;background-position:center center;background-repeat:no-repeat;
+}
+body::after{
+  content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:linear-gradient(180deg,rgba(4,11,23,.15),rgba(4,11,23,.22));
+}
+header,nav.tabs{background:rgba(6,17,33,.66)!important}
+.panel{background:rgba(10,25,46,.73)!important;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.stat{background:rgba(4,15,31,.68)!important}
+#page-explore .panel{background:rgba(8,22,41,.86)!important}
+nav.tabs button{position:relative;overflow:hidden}
+nav.tabs button.active{box-shadow:0 0 0 1px rgba(105,217,255,.24),0 6px 22px rgba(16,128,211,.32)}
+nav.tabs button.active::after{content:"";position:absolute;bottom:0;left:18%;right:18%;height:2px;background:#92ecff;box-shadow:0 0 12px #63e1ff}
+@media(max-width:700px){body::before{background-position:62% center}}
+@media(prefers-reduced-motion:reduce){nav.tabs button{transition:none}}
+</style></head><body>
+<header><div><div class="sub" style="font-size:11px;letter-spacing:2px">LUNAR MISSION ANALYSIS</div><h1>Lunar Landing Site Navigator <span class="tag">V7 · Lunar Experience</span></h1><div class="sub" style="font-size:12px">Pôle Sud · LOLA / NASA · Éphémérides JPL Horizons</div></div><div class="sub" id="health">Chargement…</div></header><nav aria-label="Navigation principale" class="tabs"><button class="active" data-tab="home" type="button">Accueil</button><button class="" data-tab="explore" type="button">Explorer</button><button class="" data-tab="comparetab" type="button">Comparer</button></nav><section class="tabpage active" id="page-home"><div class="hero"><h2>Conditions lunaires · Aujourd’hui</h2><p class="sub">Événements calculés à l’heure UTC actuelle pour le site sélectionné. Les durées se mettent à jour chaque seconde.</p></div><div class="dashboard"><section class="panel"><h2>Prochains événements Soleil / Terre</h2><h2 style="margin-top:23px">Prochains événements · maintenant (UTC)</h2>
+<div class="two">
+<div class="stat"><span id="sunEventLabel">Soleil · recherche en cours</span><b id="sunCountdown">—</b><small id="sunEventTime">—</small></div>
+<div class="stat"><span id="earthEventLabel">Terre · recherche en cours</span><b id="earthCountdown">—</b><small id="earthEventTime">—</small></div>
+</div>
+<div class="sub" style="font-size:12px">Comptes à rebours calculés pour le site sélectionné, sur 14, 30 ou 60 jours selon les transitions détectées. Actualisation des prévisions toutes les 15 minutes. Estimations géométriques provisoires.</div></section><section class="panel"><h2>Site actuellement sélectionné</h2><p class="sub" id="homeCoords">85°S / 0°E</p><div class="stat"><span>Altitude LOLA</span><b id="homeAlt">—</b></div><div class="stat"><span>Pente locale estimée</span><b id="homeSlope">—</b></div><button id="goExplore" type="button">Voir sur la carte</button><p class="notice" style="margin-top:12px">Le classement ci-dessous est une présélection exploratoire (pente + visibilité terrestre historique), pas une validation d’alunissage. L’ensoleillement n’est pas encore noté.</p><h2 style="margin-top:22px">Candidats présélectionnés</h2><div class="sub" id="homeRanking">Lance le balayage depuis Explorer.</div></section></div><section class="panel analysis-home"><h2>Analyse détaillée du site sélectionné</h2><div class="stat"><span>Altitude LOLA relative au rayon de référence</span><b id="alt">—</b></div><div class="two"><div class="stat"><span>Terre · moyenne historique</span><b id="earthval">—</b></div><div class="stat"><span>Soleil · moyenne historique</span><b id="sunval">—</b></div></div><div class="stat"><span>Zone d'ombre permanente</span><b id="psrval">—</b></div><h2 style="margin-top:23px">Fenêtres de visibilité · période choisie</h2><div class="two"><div class="stat"><span>Soleil visible</span><b id="sunpct">—</b></div><div class="stat"><span>Terre visible</span><b id="earthpct">—</b></div></div><div class="stat"><span>Soleil + Terre simultanément visibles</span><b id="bothpct">—</b></div><div class="stat"><span>Prochain coucher du Soleil (échantillonné)</span><b id="sunset">—</b></div><div class="notice" style="margin-top:20px">Méthode : DEM LOLA 120 m, horizon échantillonné jusqu'à 35 km ; visibilité géométrique du centre du Soleil/de la Terre. Les valeurs ne garantissent ni une puissance électrique donnée ni une liaison radio.</div></section></section><section class="tabpage" id="page-explore"><div class="hero"><h2>Explorer le pôle Sud</h2><p class="sub">Définis les paramètres de la mission, puis lance le balayage et consulte les résultats sur la carte.</p></div><section class="explorer-config"><div class="hero"><h2>Configuration de l’exploration et de la mission</h2><p class="sub">Choisis les coordonnées, la zone 85°S–90°S, les priorités et les contraintes. Lance ensuite l’analyse dans Explorer juste en dessous.</p></div><div class="configgrid"><section class="panel"><h2>Coordonnées et simulation</h2><div class="sub" style="font-size:13px">Clique sur la carte ou saisis des coordonnées.</div><div class="two"><div><label>Latitude (°)</label><input id="lat" max="-75" min="-90" step="0.001" type="number" value="-85"/></div><div><label>Longitude est (°)</label><input id="lon" max="180" min="-180" step="0.001" type="number" value="0"/></div></div><button class="secondary" id="locate" style="width:100%;margin-top:10px">Localiser le site</button><label>Sites de démonstration (coordonnées exploratoires)</label><button class="sitebtn" data-lat="-85" data-lon="0">Point A · 85°S / 0°E</button><button class="sitebtn" data-lat="-86" data-lon="30">Point B · 86°S / 30°E</button><button class="sitebtn" data-lat="-87" data-lon="-40">Point C · 87°S / 40°W</button><div class="notice" style="margin-top:9px">Ces points ne sont pas des sites d'alunissage approuvés. Ils servent à tester le moteur scientifique.</div><label>Date et heure UTC</label><input id="date" type="datetime-local"/><div class="two"><div><label>Durée (heures)</label><select id="hours"><option value="24">24 h</option><option selected="" value="72">72 h</option><option value="168">7 jours</option><option value="336">14 jours</option></select></div><div><label>Pas (heures)</label><select id="step"><option value="1">1 h</option><option selected="" value="0.5">30 min</option><option value="3">3 h</option><option value="6">6 h</option><option value="12">12 h</option></select></div></div><button id="run" style="width:100%;margin-top:18px">Lancer la simulation</button><button class="secondary" id="add" style="width:100%;margin-top:8px">Ajouter à la comparaison</button><div class="status" id="message">Sélectionne un site pour afficher ses données NASA. La simulation temporelle nécessite une connexion au service JPL Horizons.</div></section><section class="panel"><h2>Priorités de sélection</h2><p class="note">Ces paramètres sont sauvegardés dans ton navigateur. Ils serviront au moteur de classement lors de son intégration ; ils ne modifient pas encore les éphémérides.</p>
+<div class="fieldrow"><label for="weightSun">Ensoleillement</label><input id="weightSun" max="100" min="0" type="range" value="33"/><output id="outSun">33 %</output></div>
+<div class="fieldrow"><label for="weightEarth">Communication Terre</label><input id="weightEarth" max="100" min="0" type="range" value="33"/><output id="outEarth">33 %</output></div>
+<div class="fieldrow"><label for="weightTerrain">Terrain</label><input id="weightTerrain" max="100" min="0" type="range" value="34"/><output id="outTerrain">34 %</output></div>
+<p class="note" id="weightNotice">Pondérations normalisées à 100 %.</p>
+<button class="secondary" id="resetWeights" type="button">Réinitialiser les priorités</button>
+<h2 style="margin-top:24px">Contraintes de recherche</h2>
+<label for="maxSlope">Pente maximale envisagée (°)</label><input id="maxSlope" max="45" min="0" step="0.5" type="number" value="10"/>
+<label for="northLimit">Limite nord de la zone étudiée</label><select id="northLimit"><option value="-88">88°S–90°S · très polaire</option><option selected="" value="-85">85°S–90°S · recommandée</option><option value="-80">80°S–90°S · étendue</option><option value="-75">75°S–90°S · couverture LOLA</option></select>
+<label for="scanSpacing">Espacement initial du balayage (km)</label><select id="scanSpacing"><option value="2">2 km — détaillé</option><option selected="" value="5">5 km — équilibré</option><option value="10">10 km — rapide</option></select>
+<p class="notice" style="margin-top:12px">Ces contraintes pilotent désormais le balayage exploratoire. La pente seule ne permet pas de certifier un site d’alunissage.</p>
+</section></div></section><div class="tabgrid"><section class="panel"><div class="bar" style="justify-content:space-between;margin-bottom:12px"><h2 style="margin:0">02 · Carte lunaire</h2><select id="layer" style="width:190px"><option value="terrain">Relief LOLA</option><option value="earth">Visibilité Terre moyenne</option><option value="sun">Éclairement solaire moyen</option><option value="psr">Ombres permanentes</option></select></div><div class="bar" style="margin:0 0 14px"><button id="scanPole" type="button">Analyser la zone sélectionnée</button><span class="sub" id="scanStatus" style="font-size:12px">Balayage de grille, sans appel massif à JPL</span></div><div class="sub" id="scanResults" style="margin-bottom:12px">Aucun balayage effectué.</div><div class="mapframe" id="map"><img alt="Relief lunaire LOLA" id="base" src="/static/terrain.png"/><img alt="Couche NASA" id="overlay" src="/static/earth.png" style="display:none"/><div id="marker"></div><div id="candidatePins" style="position:absolute;inset:0;pointer-events:none"></div></div><div class="mapcaption"><span>Projection stéréographique polaire sud · centre : 90°S</span><span>75°S–90°S</span></div><div class="notice" style="margin-top:10px">Les couches d'éclairement et d'ombres permanentes ne couvrent que la zone 85°S–90°S. Les moyennes NASA ne représentent pas une date précise.</div><h2 style="margin-top:22px">03 · Évolution temporelle</h2><canvas height="230" id="chart" width="900"></canvas><div class="sub" style="font-size:12px;margin-top:6px">Courbes : élévation solaire (ambre) et terrestre (bleu). Les points tiennent compte de l'horizon topographique pour les états visibles/masqués.</div><div id="timeline" style="margin-top:12px"></div></section></div></section><section class="tabpage" id="page-comparetab"><div class="hero"><h2>Comparer les sites</h2><p class="sub">Ajoute des sites depuis la configuration située en haut de la page Explorer. Compare les résultats obtenus avec des paramètres identiques.</p></div><section class="panel" style="max-width:1100px;margin:0 auto"><h2 style="margin-top:22px">05 · Comparaison</h2><div class="sub" style="font-size:12px">Ajoute plusieurs sites puis lance une simulation pour chacun.</div><div id="compare" style="overflow-x:auto;margin-top:10px"><div class="sub">Aucun site enregistré.</div></div><button class="secondary" id="clear" style="margin-top:12px">Effacer la comparaison</button></section></section>
+<footer>NASA LOLA · PGDA Goddard · JPL Horizons · Prototype scientifique P0. Les résultats doivent être validés avant toute utilisation opérationnelle.</footer>
 <script>
-const $=id=>document.getElementById(id),EXT=457440;let latest=null,selected=null,comparisons=[];
+const $=id=>document.getElementById(id),EXT=457440;let latest=null,selected=null,comparisons=[],eventsData=null,eventGeneration=0;
 function projection(lat,lon){let R=1737400,phi=lat*Math.PI/180,lambda=lon*Math.PI/180,rho=2*R*Math.tan(Math.PI/4+phi/2);return {x:rho*Math.sin(lambda),y:rho*Math.cos(lambda)}}
 function unprojection(x,y){let rho=Math.hypot(x,y),lat=-(90-2*Math.atan(rho/(2*1737400))*180/Math.PI),lon=Math.atan2(x,y)*180/Math.PI;return {lat,lon}}
 function mark(){let {x,y}=projection(+$('lat').value,+$('lon').value);$('marker').style.left=(50+x/(2*EXT)*100)+'%';$('marker').style.top=(50-y/(2*EXT)*100)+'%'}
 function msg(t){$('message').textContent=t}
 async function post(url,payload){let r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});let j=await r.json();if(!r.ok)throw Error(typeof j.detail==='string'?j.detail:JSON.stringify(j.detail));return j}
 function sitePayload(){return {lat:+$('lat').value,lon:+$('lon').value}}
-async function locate(){mark();latest=null;resetSim();try{selected=await post('/api/site',sitePayload());$('alt').textContent=selected.alt_m===null?'Indisponible':selected.alt_m.toLocaleString('fr-FR')+' m';for(let k of ['sun','earth'])$(k+'val').textContent=selected.layers[k]===null?'Hors couverture':(selected.layers[k]*100).toFixed(1)+' %';$('psrval').textContent=selected.layers.psr===null?'Hors couverture':selected.layers.psr>.5?'Oui':'Non';msg('Données NASA chargées pour '+selected.lat.toFixed(3)+'° / '+selected.lon.toFixed(3)+'°. Lance la simulation pour les éphémérides datées.')}catch(e){msg('Erreur : '+e.message)}}
+async function locate(){eventGeneration++;eventsData=null;renderCountdowns();mark();latest=null;resetSim();try{selected=await post('/api/site',sitePayload());$('alt').textContent=selected.alt_m===null?'Indisponible':selected.alt_m.toLocaleString('fr-FR')+' m';for(let k of ['sun','earth'])$(k+'val').textContent=selected.layers[k]===null?'Hors couverture':(selected.layers[k]*100).toFixed(1)+' %';$('psrval').textContent=selected.layers.psr===null?'Hors couverture':selected.layers.psr>.5?'Oui':'Non';msg('Données NASA chargées pour '+selected.lat.toFixed(3)+'° / '+selected.lon.toFixed(3)+'°. Lance la simulation pour les éphémérides datées.');loadEvents()}catch(e){msg('Erreur : '+e.message)}}
 function resetSim(){for(let k of ['sunpct','earthpct','bothpct','sunset'])$(k).textContent='—';$('timeline').innerHTML='';let c=$('chart').getContext('2d');c.clearRect(0,0,900,230)}
 function plot(rows){let canvas=$('chart'),ctx=canvas.getContext('2d'),W=900,H=230;ctx.clearRect(0,0,W,H);ctx.fillStyle='#0b1423';ctx.fillRect(0,0,W,H);let left=44,right=W-15,top=18,bottom=H-26,min=-25,max=40;let yy=v=>bottom-(v-min)/(max-min)*(bottom-top);ctx.strokeStyle='#35435b';ctx.lineWidth=1;for(let val=-20;val<=40;val+=10){let y=yy(val);ctx.beginPath();ctx.moveTo(left,y);ctx.lineTo(right,y);ctx.stroke();ctx.fillStyle='#8fa1b9';ctx.font='12px Arial';ctx.fillText(val+'°',7,y+4)}for(let [key,color] of [['sun','#ffbd5d'],['earth','#70aaff']]){ctx.strokeStyle=color;ctx.lineWidth=2.4;ctx.beginPath();rows.forEach((r,i)=>{let x=left+(right-left)*i/Math.max(1,rows.length-1),y=yy(r[key].el);i?ctx.lineTo(x,y):ctx.moveTo(x,y)});ctx.stroke()}ctx.fillStyle='#9aacbf';ctx.fillText(rows[0].time.slice(0,16).replace('T',' '),left,bottom+18);ctx.fillText(rows.at(-1).time.slice(0,16).replace('T',' '),right-110,bottom+18)}
 function displaySimulation(d){latest=d;for(let k of ['sun','earth','both'])$(k+'pct').textContent=d.summary[k+'_percent']+' %';let rows=d.series,idx=rows.findIndex((r,i)=>i>0&&rows[i-1].sun.visible&&!r.sun.visible);$('sunset').textContent=idx<0?'Non observé sur la période':rows[idx].time.replace('T',' ').slice(0,16)+' UTC';plot(rows);$('timeline').innerHTML='<table><thead><tr><th>UTC</th><th>Soleil élév.</th><th>Soleil</th><th>Terre élév.</th><th>Terre</th></tr></thead><tbody>'+rows.map(r=>`<tr><td>${r.time.slice(0,16).replace('T',' ')}</td><td>${r.sun.el.toFixed(2)}°</td><td>${r.sun.visible?'Visible':'Masqué'}</td><td>${r.earth.el.toFixed(2)}°</td><td>${r.earth.visible?'Visible':'Masquée'}</td></tr>`).join('')+'</tbody></table>'}
@@ -21,5 +126,124 @@ function comparison(){if(!comparisons.length){$('compare').innerHTML='<div class
 $('map').addEventListener('click',e=>{let r=$('map').getBoundingClientRect(),x=((e.clientX-r.left)/r.width-.5)*2*EXT,y=(.5-(e.clientY-r.top)/r.height)*2*EXT,p=unprojection(x,y);if(p.lat< -90||p.lat> -75){msg('Sélection hors zone LOLA (75°S–90°S).');return}$('lat').value=p.lat.toFixed(4);$('lon').value=p.lon.toFixed(4);locate()});$('locate').onclick=locate;$('run').onclick=run;
 document.querySelectorAll('.sitebtn').forEach(b=>b.onclick=()=>{$('lat').value=b.dataset.lat;$('lon').value=b.dataset.lon;locate()});$('layer').onchange=e=>{let v=e.target.value,im=$('overlay');im.style.display=v==='terrain'?'none':'block';if(v!=='terrain'){im.src='/static/'+v+'.png';im.className=v==='sun'||v==='psr'?'small':'';im.style.opacity=v==='psr'?'.9':'.65'}};
 $('add').onclick=()=>{if(!selected){msg('Sélectionne d’abord un site.');return}let c={lat:selected.lat,lon:selected.lon,alt:selected.alt_m,sun:latest?.summary.sun_percent===undefined?null:latest.summary.sun_percent+' %',earth:latest?.summary.earth_percent===undefined?null:latest.summary.earth_percent+' %',both:latest?.summary.both_percent===undefined?null:latest.summary.both_percent+' %'};comparisons.push(c);comparison();msg('Site ajouté. Pour comparer les conditions temporelles, simule chaque site avec les mêmes dates et paramètres.')};$('clear').onclick=()=>{comparisons=[];comparison()};
+
+function utcNowInput(){
+  const d=new Date(), pad=n=>String(n).padStart(2,'0');
+  return d.getUTCFullYear()+'-'+pad(d.getUTCMonth()+1)+'-'+pad(d.getUTCDate())+'T'+pad(d.getUTCHours())+':'+pad(d.getUTCMinutes());
+}
+function remaining(t){
+  const seconds=Math.max(0,Math.ceil((Date.parse(t)-Date.now())/1000));
+  const days=Math.floor(seconds/86400),hours=Math.floor(seconds%86400/3600);
+  const mins=Math.floor(seconds%3600/60),secs=seconds%60;
+  return `${days}j ${String(hours).padStart(2,'0')}h ${String(mins).padStart(2,'0')}m ${String(secs).padStart(2,'0')}s`;
+}
+function renderCountdowns(){
+  for(const [body,prefix,name] of [['sun','sun','Soleil'],['earth','earth','Terre']]){
+    const info=eventsData?.bodies?.[body],event=info?.next_event;
+    const label=$(prefix+'EventLabel'),count=$(prefix+'Countdown'),time=$(prefix+'EventTime');
+    if(!info){label.textContent=name+' · recherche en cours';count.textContent='—';time.textContent='Calcul des éphémérides…';continue}
+    if(!event){
+      label.textContent=name+(info.visible_now?' · visible':' · masqué');
+      count.textContent='Aucune transition';
+      time.textContent='Non détectée sur '+(info.search_days||eventsData.search_days)+' jours analysés';
+      continue;
+    }
+    label.textContent=name+' · prochain '+(event.type==='set'?'coucher':'lever');
+    if(Date.parse(event.time)<=Date.now()){
+      count.textContent='Événement passé';
+      time.textContent='Actualisation en attente';
+    }else{
+      count.textContent=remaining(event.time);
+      time.textContent=new Date(event.time).toISOString().slice(0,16).replace('T',' ')+' UTC';
+    }
+  }
+}
+async function loadEvents(){
+  if(!selected)return;
+  const generation=eventGeneration, lat=selected.lat,lon=selected.lon;
+  try{
+    const data=await post('/api/events',{lat,lon,days:14});
+    if(generation!==eventGeneration)return;
+    eventsData=data;renderCountdowns();
+  }catch(e){
+    if(generation!==eventGeneration)return;
+    for(const prefix of ['sun','earth']){
+      $(prefix+'EventLabel').textContent='Calcul indisponible';
+      $(prefix+'Countdown').textContent='—';
+      $(prefix+'EventTime').textContent=e.message;
+    }
+  }
+}
+setInterval(renderCountdowns,1000);
+setInterval(()=>{if(selected)loadEvents()},15*60*1000);
+$('date').value=utcNowInput();
+
+
+// V2 : navigation sans rechargement, les IDs et calculs V1 sont conservés.
+function showTab(key){
+  document.querySelectorAll('.tabpage').forEach(el=>el.classList.toggle('active',el.id==='page-'+key));
+  document.querySelectorAll('nav.tabs button').forEach(el=>el.classList.toggle('active',el.dataset.tab===key));
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+document.querySelectorAll('nav.tabs button').forEach(b=>b.addEventListener('click',()=>showTab(b.dataset.tab)));
+$('goExplore').addEventListener('click',()=>showTab('explore'));
+const originalLocate=locate;
+// Actualiser la synthèse de l'accueil après chaque chargement du site.
+const homeObserver=new MutationObserver(()=>{
+  if(selected){
+    $('homeCoords').textContent=selected.lat.toFixed(3)+'° / '+selected.lon.toFixed(3)+'°';
+    $('homeAlt').textContent=selected.alt_m===null?'Indisponible':selected.alt_m.toLocaleString('fr-FR')+' m';
+    $('homeSlope').textContent=selected.slope_deg===null?'Indisponible':selected.slope_deg.toFixed(2)+'°';
+  }
+});
+homeObserver.observe($('alt'),{childList:true,characterData:true,subtree:true});
+const weightIds=['weightSun','weightEarth','weightTerrain'];
+const outputIds=['outSun','outEarth','outTerrain'];
+const defaults=[33,33,34];
+function updateWeights(){
+  const values=weightIds.map(id=>Number($(id).value));
+  const sum=values.reduce((a,b)=>a+b,0);
+  values.forEach((v,i)=>$(outputIds[i]).textContent=sum?(100*v/sum).toFixed(1)+' %':'0 %');
+  $('weightNotice').textContent=sum?'Pondérations normalisées à 100 %.':'Sélectionne au moins une priorité non nulle.';
+  try{localStorage.setItem('lunarMissionV2',JSON.stringify({weights:values,maxSlope:$('maxSlope').value,scanSpacing:$('scanSpacing').value,northLimit:$('northLimit').value}));}catch(e){}
+}
+try{
+  const saved=JSON.parse(localStorage.getItem('lunarMissionV2')||'null');
+  if(saved){if(Array.isArray(saved.weights)&&saved.weights.length===3)saved.weights.forEach((v,i)=>$(weightIds[i]).value=Math.max(0,Math.min(100,Number(v)||0)));
+    if(saved.maxSlope!==undefined)$('maxSlope').value=saved.maxSlope;
+    if(saved.scanSpacing!==undefined)$('scanSpacing').value=saved.scanSpacing;
+    if(saved.northLimit!==undefined)$('northLimit').value=saved.northLimit;}
+}catch(e){}
+[...weightIds,'maxSlope','scanSpacing','northLimit'].forEach(id=>$(id).addEventListener('input',updateWeights));
+$('resetWeights').addEventListener('click',()=>{defaults.forEach((v,i)=>$(weightIds[i]).value=v);updateWeights()});
+updateWeights();
+
+
+let scanData=null;
+function showCandidate(site){
+  $('lat').value=site.lat;$('lon').value=site.lon;
+  showTab('explore');locate();
+}
+function renderScan(){
+  if(!scanData)return;
+  const sites=scanData.sites;
+  const rows=sites.map((s,i)=>`<tr><td>${i+1}</td><td><button class="secondary" style="padding:6px 9px" data-candidate="${i}">${s.lat.toFixed(3)}° / ${s.lon.toFixed(3)}°</button></td><td>${s.score.toFixed(1)}</td><td>${s.slope_deg.toFixed(2)}°</td><td>${s.earth_historical_percent.toFixed(1)} %</td></tr>`).join('');
+  const table=sites.length?`<div style="overflow-x:auto"><table><thead><tr><th>#</th><th>Coordonnées</th><th>Score provisoire</th><th>Pente</th><th>Terre historique</th></tr></thead><tbody>${rows}</tbody></table></div>`:'Aucun point admissible avec ces contraintes.';
+  $('scanResults').innerHTML=`<p class="sub">${scanData.eligible_points.toLocaleString('fr-FR')} points admissibles · zone ${Math.abs(scanData.north_limit_lat)}°S–90°S · grille ${scanData.spacing_km} km · classement Terre/terrain uniquement.</p>`+table;
+  $('homeRanking').innerHTML=sites.slice(0,5).map((s,i)=>`<div class="stat"><span>Candidat ${i+1} · score provisoire ${s.score.toFixed(1)}/100</span><b style="font-size:15px">${s.lat.toFixed(3)}° / ${s.lon.toFixed(3)}°</b><button class="secondary" style="margin-top:7px;padding:7px 10px" data-candidate="${i}">Étudier ce site</button></div>`).join('')||'Aucun candidat.';
+  $('candidatePins').innerHTML=sites.map((s,i)=>`<div title="Candidat ${i+1} · ${s.score}/100" style="position:absolute;left:${50+s.x/(2*EXT)*100}%;top:${50-s.y/(2*EXT)*100}%;transform:translate(-50%,-50%);width:10px;height:10px;border-radius:50%;border:1px solid white;background:#37d9b5;box-shadow:0 0 0 2px #082e35"></div>`).join('');
+  document.querySelectorAll('[data-candidate]').forEach(b=>b.addEventListener('click',()=>showCandidate(sites[Number(b.dataset.candidate)])));
+}
+$('scanPole').addEventListener('click',async()=>{
+  const b=$('scanPole');b.disabled=true;
+  $('scanStatus').textContent='Analyse en cours…';
+  try{
+    const data=await post('/api/scan',{north_limit_lat:Number($('northLimit').value),spacing_km:Number($('scanSpacing').value),max_slope:Number($('maxSlope').value),weight_sun:Number($('weightSun').value),weight_earth:Number($('weightEarth').value),weight_terrain:Number($('weightTerrain').value)});
+    scanData=data;renderScan();
+    $('scanStatus').textContent=`Terminé : ${data.eligible_points.toLocaleString('fr-FR')} candidats admissibles entre ${Math.abs(data.north_limit_lat)}°S et 90°S. Soleil non noté.`;
+  }catch(e){$('scanStatus').textContent='Erreur : '+e.message;}
+  finally{b.disabled=false;}
+});
+
 fetch('/api/status').then(r=>r.json()).then(j=>{$('health').textContent=j.dem?'Données LOLA prêtes':'DEM manquant'}).catch(()=>{$('health').textContent='Service indisponible'});locate();
 </script></body></html>
